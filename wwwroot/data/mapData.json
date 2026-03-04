@@ -1,6 +1,75 @@
 ﻿{
   "TotalPages": 1000,
-  "Characters": [],
-  "Chapters": [],
-  "Entries": []
+  "Characters": [
+    {
+      "Id": "684b1eab-6fe5-4445-ad38-782ca3221778",
+      "Name": "Test",
+      "Color": "#3b82f6"
+    },
+    {
+      "Id": "605befdc-947d-4775-83ce-16b9aa09c23f",
+      "Name": "test2",
+      "Color": "#f2f2f2"
+    }
+  ],
+  "Chapters": [
+    {
+      "Name": "Chapter 1",
+      "Page": 1
+    },
+    {
+      "Name": "Chapter 2",
+      "Page": 500
+    }
+  ],
+  "Entries": [
+    {
+      "CharacterId": "605befdc-947d-4775-83ce-16b9aa09c23f",
+      "Page": 1,
+      "Progress": 0.001,
+      "Location": "start",
+      "X": 59.92,
+      "Y": 63.83,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "605befdc-947d-4775-83ce-16b9aa09c23f",
+      "Page": 600,
+      "Progress": 0.6,
+      "Location": "Flam",
+      "X": 22.54,
+      "Y": 27.29,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "684b1eab-6fe5-4445-ad38-782ca3221778",
+      "Page": 1,
+      "Progress": 0.001,
+      "Location": "start",
+      "X": 23.45,
+      "Y": 60.2,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "684b1eab-6fe5-4445-ad38-782ca3221778",
+      "Page": 600,
+      "Progress": 0.6,
+      "Location": "Flam",
+      "X": 22.54,
+      "Y": 27.29,
+      "Note": "",
+      "IsInvisible": false
+    }
+  ],
+  "Locations": [
+    {
+      "Id": "d4e6d361-edef-48c9-a1cb-2e937074eccf",
+      "Name": "Flam",
+      "X": 22.54,
+      "Y": 27.29
+    }
+  ]
 }

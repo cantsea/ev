@@ -6,6 +6,7 @@ public class MapData
     public List<CharacterModel> Characters { get; set; } = new();
     public List<ChapterModel> Chapters { get; set; } = new();
     public List<MapEntry> Entries { get; set; } = new();
+    public List<LocationPreset> Locations { get; set; } = new();
 }
 
 public class CharacterModel
@@ -22,6 +23,14 @@ public class ChapterModel
 
     public double GetProgress(int totalPages) =>
         totalPages > 0 ? Math.Round(Page / totalPages, 4) : 0;
+}
+
+public class LocationPreset
+{
+    public string Id { get; set; } = Guid.NewGuid().ToString();
+    public string Name { get; set; } = "";
+    public double X { get; set; }
+    public double Y { get; set; }
 }
 
 public class MapEntry

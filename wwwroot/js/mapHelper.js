@@ -1,4 +1,27 @@
 ﻿window.mapHelper = {
+    panzoomInstances: {},
+
+    initPanzoom: function (wrapperId, elementId) {
+        const el = document.getElementById(elementId);
+        if (!el) return;
+        if (window.mapHelper.panzoomInstances[wrapperId]) {
+            window.mapHelper.panzoomInstances[wrapperId].destroy();
+        }
+        const instance = Panzoom(el, {
+            maxScale: 8,
+            minScale: 1,
+            contain: 'outside',
+            cursor: 'grab'
+        });
+        el.parentElement.addEventListener('wheel', instance.zoomWithWheel);
+        window.mapHelper.panzoomInstances[wrapperId] = instance;
+    },
+
+    resetZoom: function (wrapperId) {
+        const instance = window.mapHelper.panzoomInstances[wrapperId];
+        if (instance) instance.reset();
+    },
+
     getClickPercentage: function (element, clientX, clientY) {
         const rect = element.getBoundingClientRect();
         const x = ((clientX - rect.left) / rect.width) * 100;
