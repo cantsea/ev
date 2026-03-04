@@ -2,24 +2,36 @@
 @inject HttpClient Http
 @using ev.Models
 
-{{-- Slider --}}
 <MudPaper Elevation="2" Class="pa-4 mb-2">
-    <MudText Typo="Typo.subtitle2" Class="mb-1">
-        Book Progress: @($"{_progress:P1}")
-    </MudText>
-    <MudSlider T="double" Min="0" Max="1" Step="0.001"
-               @bind-Value="_progress"
-               Color="Color.Primary" />
+    @if (_data.Chapters.Any())
+    {
+        var chapters = _data.Chapters.OrderBy(c => c.Number).ToList();
+        <MudSlider T="int" Min="1" Max="@(chapters.Count + 1)" Step="1"
+                   @bind-Value="_chapterIndex"
+                   Color="Color.Primary"
+                   TickMarks="true"
+                   TickMarkLabels="@chapters.Select(c => $"Ch.{c.Number} {c.Name}").Append("End").ToArray()" />
+    }
+    else
+    {
+        <MudText Typo="Typo.body2" Color="Color.Secondary">No chapters loaded yet.</MudText>
+    }
 </MudPaper>
 
 <MudPaper Elevation="2" Class="pa-4 mb-2">
     <MudGrid>
         <MudItem xs="4">
-            <MudTextField Label="Current Chapter"
-                          Value="@(CurrentChapter != null ? $"Ch. {CurrentChapter.Number} — {CurrentChapter.Name}" : "")"
-                          Placeholder="Not started..."
-                          Variant="Variant.Outlined"
-                          ReadOnly="true" />
+            <MudSelect T="int" Label="Current Chapter" @bind-Value="_chapterIndex"
+                       Variant="Variant.Outlined">
+                @foreach (var chapter in _data.Chapters.OrderBy(c => c.Number))
+                {
+                    var index = _data.Chapters.OrderBy(c => c.Number).ToList().IndexOf(chapter) + 1;
+                    <MudSelectItem T="int" Value="@index">
+                        Ch. @chapter.Number — @chapter.Name
+                    </MudSelectItem>
+                }
+                <MudSelectItem T="int" Value="@(_data.Chapters.Count + 1)">End</MudSelectItem>
+            </MudSelect>
         </MudItem>
         <MudItem xs="4">
             <MudTextField Label="Character"
@@ -29,8 +41,8 @@
                           ReadOnly="true" />
         </MudItem>
         <MudItem xs="4">
-            <MudTextField Label="Book Progress"
-                          Value="@(_hoveredEntry != null ? $"{_hoveredEntry.Progress:P1}" : "")"
+            <MudTextField Label="Location"
+                          Value="@(_hoveredEntry != null ? _hoveredEntry.Location : "")"
                           Placeholder="Hover over a marker..."
                           Variant="Variant.Outlined"
                           ReadOnly="true" />
@@ -116,17 +128,26 @@
     <MudGrid>
 
         <MudItem xs="12" sm="6" md="2">
-            <MudText Typo="Typo.subtitle2" Class="mb-1">📖 Book Progress</MudText>
+            <MudText Typo="Typo.subtitle2" Class="mb-1">Chapters</MudText>
             <MudTimeline TimelinePosition="TimelinePosition.Start">
+                @if (IsEnd)
+                {
+                    <MudTimelineItem Color="Color.Primary" Size="Size.Small">
+                        <ItemContent>
+                            <MudText Typo="Typo.body2"><strong>End</strong></MudText>
+                            <MudText Typo="Typo.caption">All entries shown</MudText>
+                        </ItemContent>
+                    </MudTimelineItem>
+                }
                 @foreach (var chapter in PastChapters)
                 {
-                    var opacity = chapter == CurrentChapter ? 1.0 : 0.5;
-                    <MudTimelineItem Color="Color.Primary" Size="Size.Small"
-                                     Style="@($"opacity:{opacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}")">
+                    var isCurrent = !IsEnd && chapter == SelectedChapter;
+                    <MudTimelineItem Color="@(isCurrent? Color.Primary: Color.Default)" Size="Size.Small"
+                                     Style="@($"opacity:{(isCurrent ? "1.0" : "0.5")}")">
                         <ItemContent>
                             <MudText Typo="Typo.body2"><strong>Ch. @chapter.Number</strong></MudText>
                             <MudText Typo="Typo.caption">@chapter.Name</MudText>
-                            <MudText Typo="Typo.caption">p.@chapter.Page (@($"{chapter.GetProgress(_data.TotalPages):P0}"))</MudText>
+                            <MudText Typo="Typo.caption">p.@chapter.Page</MudText>
                         </ItemContent>
                     </MudTimelineItem>
                 }
@@ -149,14 +170,11 @@
                         {
                             var entry = trail[i];
                             var entryOpacity = GetOpacity(i, trail.Count);
-
-                            // Find which chapter this entry falls in
                             var entryChapter = _data.Chapters
-                            .Where(ch => ch.GetProgress(_data.TotalPages) <= entry.Progress)
+                            .Where(ch => ch.Page <= entry.Page)
                             .OrderByDescending(ch => ch.Page)
                             .FirstOrDefault();
 
-                            // Insert chapter divider if chapter changed
                             if (entryChapter != null && entryChapter != lastChapterShown)
                             {
                                 lastChapterShown = entryChapter;
@@ -173,7 +191,7 @@
                                              Style="@($"opacity:{entryOpacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}")">
                                 <ItemContent>
                                     <MudText Typo="Typo.body2"><strong>@entry.Location</strong></MudText>
-                                    <MudText Typo="Typo.caption">p.@entry.Page (@($"{entry.Progress:P0}"))</MudText>
+                                    <MudText Typo="Typo.caption">p.@entry.Page</MudText>
                                     @if (!string.IsNullOrEmpty(entry.Note))
                                     {
                                         <MudText Typo="Typo.caption" Color="Color.Secondary">@entry.Note</MudText>
@@ -191,20 +209,18 @@
 
 @code {
     private MapData _data = new();
-    private double _progress = 0;
+    private int _chapterIndex = 1;
     private MapEntry? _hoveredEntry;
 
-    private ChapterModel? CurrentChapter =>
-        _data.Chapters
-            .Where(c => c.GetProgress(_data.TotalPages) <= _progress)
-            .OrderByDescending(c => c.Page)
-            .FirstOrDefault();
+    private bool IsEnd => _chapterIndex > _data.Chapters.Count;
+
+    private ChapterModel? SelectedChapter =>
+        _data.Chapters.Any()
+            ? _data.Chapters.OrderBy(c => c.Number).ElementAtOrDefault(_chapterIndex - 1)
+            : null;
 
     private List<ChapterModel> PastChapters =>
-        _data.Chapters
-            .Where(c => c.GetProgress(_data.TotalPages) <= _progress)
-            .OrderByDescending(c => c.Page)
-            .ToList();
+        _data.Chapters.OrderByDescending(c => c.Page).ToList();
 
     protected override async Task OnInitializedAsync()
     {
@@ -212,10 +228,7 @@
         {
             _data = await Http.GetFromJsonAsync<MapData>("data/mapdata.json") ?? new();
         }
-        catch
-        {
-            _data = new();
-        }
+        catch { _data = new(); }
     }
 
     private CharacterModel? GetCharacter(string id) =>
@@ -229,9 +242,11 @@
 
     private List<MapEntry> GetTrail(string characterId)
     {
+        if (!_data.Chapters.Any()) return new();
         return _data.Entries
-            .Where(e => e.CharacterId == characterId && e.Progress <= _progress)
-            .OrderByDescending(e => e.Progress)
+            .Where(e => e.CharacterId == characterId &&
+                        (IsEnd || e.Page < SelectedChapter!.Page))
+            .OrderByDescending(e => e.Page)
             .Take(5)
             .ToList();
     }
