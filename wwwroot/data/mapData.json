@@ -1,75 +1,248 @@
 ﻿{
-  "TotalPages": 1000,
-  "Characters": [
-    {
-      "Id": "684b1eab-6fe5-4445-ad38-782ca3221778",
-      "Name": "Test",
-      "Color": "#3b82f6"
-    },
-    {
-      "Id": "605befdc-947d-4775-83ce-16b9aa09c23f",
-      "Name": "test2",
-      "Color": "#f2f2f2"
-    }
-  ],
+  "TotalPages": 497,
+  "Characters": [],
   "Chapters": [
     {
-      "Name": "Chapter 1",
+      "Name": "Prologue: Shade of Fear",
       "Page": 1
     },
     {
-      "Name": "Chapter 2",
-      "Page": 500
+      "Name": "Discovery",
+      "Page": 6
+    },
+    {
+      "Name": "Palancar Valley",
+      "Page": 9
+    },
+    {
+      "Name": "Dragon Tales",
+      "Page": 19
+    },
+    {
+      "Name": "Fate\u0027s Gift",
+      "Page": 35
+    },
+    {
+      "Name": "Awakening",
+      "Page": 38
+    },
+    {
+      "Name": "Tea for Two",
+      "Page": 47
+    },
+    {
+      "Name": "A Name of Power",
+      "Page": 56
+    },
+    {
+      "Name": "A Miller-to-Be",
+      "Page": 60
+    },
+    {
+      "Name": "Strangers in Carvahall",
+      "Page": 60
+    },
+    {
+      "Name": "Flight of Destiny",
+      "Page": 70
+    },
+    {
+      "Name": "The Doom of Innocence",
+      "Page": 75
+    },
+    {
+      "Name": "Deathwatch",
+      "Page": 81
+    },
+    {
+      "Name": "The Madness of Life",
+      "Page": 90
+    },
+    {
+      "Name": "A Rider\\\u0027s Blade",
+      "Page": 92
+    },
+    {
+      "Name": "Saddlemaking",
+      "Page": 107
+    },
+    {
+      "Name": "Therinsford",
+      "Page": 111
+    },
+    {
+      "Name": "Thunder Roar and Lightning Crackle",
+      "Page": 123
+    },
+    {
+      "Name": "Revelation at Yazuac",
+      "Page": 129
+    },
+    {
+      "Name": "Admonishments",
+      "Page": 135
+    },
+    {
+      "Name": "Magic Is the Simplest Thing",
+      "Page": 143
+    },
+    {
+      "Name": "Daret",
+      "Page": 152
+    },
+    {
+      "Name": "Through a Dragon\u0027s Eye",
+      "Page": 161
+    },
+    {
+      "Name": "A Song for the Road",
+      "Page": 169
+    },
+    {
+      "Name": "A Taste of Teirm",
+      "Page": 173
+    },
+    {
+      "Name": "An Old Friend",
+      "Page": 179
+    },
+    {
+      "Name": "The Witch and the Werecat",
+      "Page": 198
+    },
+    {
+      "Name": "Of Reading and Plots",
+      "Page": 210
+    },
+    {
+      "Name": "Thieves in the Castle",
+      "Page": 213
+    },
+    {
+      "Name": "A Costly Mistake",
+      "Page": 221
+    },
+    {
+      "Name": "Vision of Perfection",
+      "Page": 234
+    },
+    {
+      "Name": "Master of the Blade",
+      "Page": 240
+    },
+    {
+      "Name": "The Mire of Dras-Leona",
+      "Page": 246
+    },
+    {
+      "Name": "Trail of Oil",
+      "Page": 250
+    },
+    {
+      "Name": "Worshipers of Helgrind",
+      "Page": 255
+    },
+    {
+      "Name": "The Ra\u0027zac\u0027s Revenge",
+      "Page": 264
+    },
+    {
+      "Name": "Murtagh",
+      "Page": 267
+    },
+    {
+      "Name": "Legacy of a Rider",
+      "Page": 273
+    },
+    {
+      "Name": "Diamond Tomb",
+      "Page": 278
+    },
+    {
+      "Name": "Capture at Gil\u0027ead",
+      "Page": 285
+    },
+    {
+      "Name": "Du Sundavar Freohr",
+      "Page": 293
+    },
+    {
+      "Name": "Fighting Shadows",
+      "Page": 300
+    },
+    {
+      "Name": "A Warrior and a Healer",
+      "Page": 310
+    },
+    {
+      "Name": "Water from Sand",
+      "Page": 317
+    },
+    {
+      "Name": "The Ramr River",
+      "Page": 324
+    },
+    {
+      "Name": "The Hadarac Desert",
+      "Page": 331
+    },
+    {
+      "Name": "A Path Revealed",
+      "Page": 337
+    },
+    {
+      "Name": "A Clash of Wills",
+      "Page": 347
+    },
+    {
+      "Name": "Flight Through the Valley",
+      "Page": 354
+    },
+    {
+      "Name": "The Horns of a Dilemma",
+      "Page": 369
+    },
+    {
+      "Name": "Hunting for Answers",
+      "Page": 379
+    },
+    {
+      "Name": "The Glory of Tronjheim",
+      "Page": 393
+    },
+    {
+      "Name": "Ajihad",
+      "Page": 402
+    },
+    {
+      "Name": "Bless the Child, Argetlam",
+      "Page": 420
+    },
+    {
+      "Name": "Mandrake Root and Newt\u0027s Tongue",
+      "Page": 433
+    },
+    {
+      "Name": "Hall of the Mountain King",
+      "Page": 439
+    },
+    {
+      "Name": "Arya\u0027s Test",
+      "Page": 453
+    },
+    {
+      "Name": "The Shadows Lengthen",
+      "Page": 467
+    },
+    {
+      "Name": "Battle Under Farthen D\u00FBr",
+      "Page": 479
+    },
+    {
+      "Name": "The Mourning Sage",
+      "Page": 492
     }
   ],
-  "Entries": [
-    {
-      "CharacterId": "605befdc-947d-4775-83ce-16b9aa09c23f",
-      "Page": 1,
-      "Progress": 0.001,
-      "Location": "start",
-      "X": 59.92,
-      "Y": 63.83,
-      "Note": "",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "605befdc-947d-4775-83ce-16b9aa09c23f",
-      "Page": 600,
-      "Progress": 0.6,
-      "Location": "Flam",
-      "X": 22.54,
-      "Y": 27.29,
-      "Note": "",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "684b1eab-6fe5-4445-ad38-782ca3221778",
-      "Page": 1,
-      "Progress": 0.001,
-      "Location": "start",
-      "X": 23.45,
-      "Y": 60.2,
-      "Note": "",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "684b1eab-6fe5-4445-ad38-782ca3221778",
-      "Page": 600,
-      "Progress": 0.6,
-      "Location": "Flam",
-      "X": 22.54,
-      "Y": 27.29,
-      "Note": "",
-      "IsInvisible": false
-    }
-  ],
-  "Locations": [
-    {
-      "Id": "d4e6d361-edef-48c9-a1cb-2e937074eccf",
-      "Name": "Flam",
-      "X": 22.54,
-      "Y": 27.29
-    }
-  ]
+  "Entries": [],
+  "Locations": []
 }
