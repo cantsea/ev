@@ -16,4 +16,10 @@
     <PackageReference Include="MudBlazor" Version="9.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Content Update="wwwroot\data\mapData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+  </ItemGroup>
+
 </Project>
