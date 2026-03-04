@@ -17,18 +17,17 @@ public class CharacterModel
 
 public class ChapterModel
 {
-    public int Number { get; set; }
     public string Name { get; set; } = "";
-    public int Page { get; set; }
+    public double Page { get; set; }
 
     public double GetProgress(int totalPages) =>
-        totalPages > 0 ? Math.Round((double)Page / totalPages, 4) : 0;
+        totalPages > 0 ? Math.Round(Page / totalPages, 4) : 0;
 }
 
 public class MapEntry
 {
     public string CharacterId { get; set; } = "";
-    public int Page { get; set; }
+    public double Page { get; set; }
     public double Progress { get; set; }
     public string Location { get; set; } = "";
     public double X { get; set; }

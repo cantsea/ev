@@ -5,12 +5,11 @@
 <MudPaper Elevation="2" Class="pa-4 mb-2">
     @if (_data.Chapters.Any())
     {
-        var chapters = _data.Chapters.OrderBy(c => c.Number).ToList();
+        var chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
         <MudSlider T="int" Min="1" Max="@(chapters.Count + 1)" Step="1"
                    @bind-Value="_chapterIndex"
                    Color="Color.Primary"
-                   TickMarks="true"
-                   TickMarkLabels="@chapters.Select(c => $"Ch.{c.Number} {c.Name}").Append("End").ToArray()" />
+                   TickMarks="true"/>
     }
     else
     {
@@ -23,12 +22,10 @@
         <MudItem xs="4">
             <MudSelect T="int" Label="Current Chapter" @bind-Value="_chapterIndex"
                        Variant="Variant.Outlined">
-                @foreach (var chapter in _data.Chapters.OrderBy(c => c.Number))
+                @foreach (var chapter in _data.Chapters.OrderBy(c => c.Page))
                 {
-                    var index = _data.Chapters.OrderBy(c => c.Number).ToList().IndexOf(chapter) + 1;
-                    <MudSelectItem T="int" Value="@index">
-                        Ch. @chapter.Number — @chapter.Name
-                    </MudSelectItem>
+                    var index = _data.Chapters.OrderBy(c => c.Page).ToList().IndexOf(chapter) + 1;
+                    <MudSelectItem T="int" Value="@index">@chapter.Name</MudSelectItem>
                 }
                 <MudSelectItem T="int" Value="@(_data.Chapters.Count + 1)">End</MudSelectItem>
             </MudSelect>
@@ -128,7 +125,7 @@
     <MudGrid>
 
         <MudItem xs="12" sm="6" md="2">
-            <MudText Typo="Typo.subtitle2" Class="mb-1">Chapters</MudText>
+            <MudText Typo="Typo.subtitle2" Class="mb-1">📖 Book Progress</MudText>
             <MudTimeline TimelinePosition="TimelinePosition.Start">
                 @if (IsEnd)
                 {
@@ -145,8 +142,7 @@
                     <MudTimelineItem Color="@(isCurrent? Color.Primary: Color.Default)" Size="Size.Small"
                                      Style="@($"opacity:{(isCurrent ? "1.0" : "0.5")}")">
                         <ItemContent>
-                            <MudText Typo="Typo.body2"><strong>Ch. @chapter.Number</strong></MudText>
-                            <MudText Typo="Typo.caption">@chapter.Name</MudText>
+                            <MudText Typo="Typo.body2"><strong>@chapter.Name</strong></MudText>
                             <MudText Typo="Typo.caption">p.@chapter.Page</MudText>
                         </ItemContent>
                     </MudTimelineItem>
@@ -181,7 +177,7 @@
                                 <MudTimelineItem Color="Color.Default" Size="Size.Small" Style="opacity:0.5">
                                     <ItemContent>
                                         <MudText Typo="Typo.caption" Color="Color.Secondary">
-                                            ── Ch. @entryChapter.Number: @entryChapter.Name ──
+                                            ── @entryChapter.Name ──
                                         </MudText>
                                     </ItemContent>
                                 </MudTimelineItem>
@@ -216,7 +212,7 @@
 
     private ChapterModel? SelectedChapter =>
         _data.Chapters.Any()
-            ? _data.Chapters.OrderBy(c => c.Number).ElementAtOrDefault(_chapterIndex - 1)
+            ? _data.Chapters.OrderBy(c => c.Page).ElementAtOrDefault(_chapterIndex - 1)
             : null;
 
     private List<ChapterModel> PastChapters =>

@@ -46,12 +46,10 @@
             <MudDivider Class="my-4" />
 
             <MudText Typo="Typo.h6" Class="mb-2">Add Chapter</MudText>
-            <MudNumericField T="int" Label="Chapter Number" @bind-Value="_newChapterNumber"
-                             Variant="Variant.Outlined" Class="mb-2" Min="1" />
             <MudTextField @bind-Value="_newChapterName" Label="Chapter Name"
                           Variant="Variant.Outlined" Class="mb-2" />
-            <MudNumericField T="int" Label="Starting Page" @bind-Value="_newChapterPage"
-                             Variant="Variant.Outlined" Class="mb-2" Min="1" Max="@_data.TotalPages" />
+            <MudNumericField T="double" Label="Starting Page" @bind-Value="_newChapterPage"
+                             Variant="Variant.Outlined" Class="mb-2" Min="0.1" />
             <MudButton Variant="Variant.Filled" Color="Color.Secondary"
                        FullWidth="true" OnClick="AddChapter"
                        Disabled="@(string.IsNullOrWhiteSpace(_newChapterName))">
@@ -68,9 +66,8 @@
                     <MudSelectItem Value="@c.Id">@c.Name</MudSelectItem>
                 }
             </MudSelect>
-            <MudNumericField T="int" Label="Page Number" @bind-Value="_formPage"
-                             Variant="Variant.Outlined" Class="mb-2"
-                             Min="1" Max="@_data.TotalPages" />
+            <MudNumericField T="double" Label="Page Number" @bind-Value="_formPage"
+                             Variant="Variant.Outlined" Class="mb-2" Min="0.1" />
             <MudTextField @bind-Value="_formLocation" Label="Location"
                           Variant="Variant.Outlined" Class="mb-2" />
             <MudTextField @bind-Value="_formNote" Label="Note (optional)"
@@ -239,12 +236,11 @@
     private string _newCharName = "";
     private string _newCharColor = "#3b82f6";
 
-    private int _newChapterNumber = 1;
     private string _newChapterName = "";
-    private int _newChapterPage = 1;
+    private double _newChapterPage = 1;
 
     private string _formCharacterId = "";
-    private int _formPage = 1;
+    private double _formPage = 1;
     private string _formLocation = "";
     private string _formNote = "";
     private bool _formIsInvisible = false;
@@ -256,19 +252,9 @@
         !string.IsNullOrWhiteSpace(_formLocation) &&
         _pendingX.HasValue;
 
-    // Unified row model for the table
     private record TableRow(
-        string Type,
-        string Character,
-        int Page,
-        double Progress,
-        string Label,
-        double? X,
-        double? Y,
-        string Note,
-        bool Invisible,
-        object Source
-    );
+        string Type, string Character, double Page, double Progress,
+        string Label, double? X, double? Y, string Note, bool Invisible, object Source);
 
     private List<TableRow> UnifiedRows =>
         _data.Entries.Select(e => new TableRow(
@@ -281,20 +267,18 @@
             Y: e.Y,
             Note: e.Note,
             Invisible: e.IsInvisible,
-            Source: e
-        ))
+            Source: e))
         .Concat(_data.Chapters.Select(ch => new TableRow(
             Type: "Chapter",
             Character: "",
             Page: ch.Page,
             Progress: ch.GetProgress(_data.TotalPages),
-            Label: $"Ch. {ch.Number} — {ch.Name}",
+            Label: ch.Name,
             X: null,
             Y: null,
             Note: "",
             Invisible: false,
-            Source: ch
-        )))
+            Source: ch)))
         .ToList();
 
     private void DeleteRow(TableRow row)
@@ -361,15 +345,12 @@
     private void AddChapter()
     {
         if (string.IsNullOrWhiteSpace(_newChapterName)) return;
-        _data.Chapters.RemoveAll(c => c.Number == _newChapterNumber);
         _data.Chapters.Add(new ChapterModel
         {
-            Number = _newChapterNumber,
             Name = _newChapterName.Trim(),
             Page = _newChapterPage
         });
-        _data.Chapters = _data.Chapters.OrderBy(c => c.Number).ToList();
-        _newChapterNumber = _data.Chapters.Max(c => c.Number) + 1;
+        _data.Chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
         _newChapterName = "";
         RefreshJson();
     }
@@ -381,7 +362,7 @@
         {
             CharacterId = _formCharacterId,
             Page = _formPage,
-            Progress = Math.Round((double)_formPage / _data.TotalPages, 4),
+            Progress = Math.Round(_formPage / _data.TotalPages, 4),
             Location = _formLocation.Trim(),
             X = Math.Round(_pendingX!.Value, 2),
             Y = Math.Round(_pendingY!.Value, 2),
@@ -394,12 +375,6 @@
         _formLocation = "";
         _formNote = "";
         _formIsInvisible = false;
-        RefreshJson();
-    }
-
-    private void RemoveEntry(MapEntry entry)
-    {
-        _data.Entries.Remove(entry);
         RefreshJson();
     }
 
