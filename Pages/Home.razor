@@ -1,18 +1,54 @@
 ﻿@page "/"
+@inject HttpClient Http
+@using ev.Models
 
-<MudPaper Elevation="0" Class="pa-4">
-    <MudText Typo="Typo.h5" Class="mb-4">Map Timeline</MudText>
+<MudText Typo="Typo.h5" Class="mb-4">Map Timeline</MudText>
 
+    <MudPaper Elevation="2" Class="pa-4 mb-2">
+        <MudGrid>
+            <MudItem xs="6">
+                <MudTextField Label="Character"
+                              Value="@(_hoveredEntry != null ? _data.Characters.FirstOrDefault(c => c.Id == _hoveredEntry.CharacterId)?.Name : "")"
+                              Placeholder="Hover over a marker..."
+                              Variant="Variant.Outlined"
+                              ReadOnly="true" />
+            </MudItem>
+        </MudGrid>
+    </MudPaper>
+
+<MudPaper Elevation="2" Class="pa-2">
     <div style="position: relative; display: inline-block; width: 100%;">
-        <MudImage Src="Images/Maps/inheritance_original_map.jpg"
-                  ObjectFit="ObjectFit.Contain"
-                  Fluid="true"
-                  Alt="Map" />
 
-        <MudTooltip Text="Test Location">
+        <MudImage Src="Images/Maps/inheritance_original_map.jpg"
+                  Fluid="true" ObjectFit="ObjectFit.Contain" Alt="Map" />
+
+        @foreach (var entry in _data.Entries)
+        {
+            var character = _data.Characters.FirstOrDefault(c => c.Id == entry.CharacterId);
+            if (character == null) continue;
+            var capturedEntry = entry;
             <MudIconButton Icon="@Icons.Material.Filled.Place"
-                           Color="Color.Error"
-                           Style="position: absolute; left: 50%; top: 50%; transform: translate(-50%, -50%); padding: 0;" />
-        </MudTooltip>
+                           Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color};")"
+                           @onmouseenter="() => _hoveredEntry = capturedEntry"
+                           @onmouseleave="() => _hoveredEntry = null" />
+        }
+
     </div>
 </MudPaper>
+
+@code {
+    private MapData _data = new();
+    private MapEntry? _hoveredEntry;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _data = await Http.GetFromJsonAsync<MapData>("data/mapdata.json") ?? new();
+        }
+        catch
+        {
+            _data = new();
+        }
+    }
+}

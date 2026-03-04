@@ -1,0 +1,292 @@
+﻿@page "/editor"
+@inject IJSRuntime JS
+@inject HttpClient Http
+@using ev.Models
+@using System.Text.Json
+@using System.Text.Json.Serialization
+
+<MudText Typo="Typo.h5" Class="mb-4">Editor</MudText>
+
+<MudGrid>
+    <MudItem xs="3">
+        <MudPaper Elevation="2" Class="pa-4" Style="height:100%;">
+            <MudText Typo="Typo.h6" Class="mb-2">Book Settings</MudText>
+            <MudNumericField T="int" Label="Total Pages" @bind-Value="_data.TotalPages"
+                             Variant="Variant.Outlined" Class="mb-4"
+                             OnBlur="RefreshJson" />
+
+            <MudDivider Class="mb-4" />
+            <MudText Typo="Typo.h6" Class="mb-2">Characters</MudText>
+
+            @foreach (var c in _data.Characters)
+            {
+                <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
+                    <MudIcon Icon="@Icons.Material.Filled.Circle"
+                             Style="@($"color:{c.Color}")" />
+                    <MudText Style="flex:1">@c.Name</MudText>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Size="Size.Small"
+                                   OnClick="() => RemoveCharacter(c)" />
+                </MudStack>
+            }
+
+            <MudTextField @bind-Value="_newCharName" Label="Name"
+                          Variant="Variant.Outlined" Class="mb-2" />
+            <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
+                <MudText>Color</MudText>
+                <input type="color" @bind="_newCharColor"
+                       style="width:40px; height:36px; border:none; cursor:pointer;" />
+            </MudStack>
+            <MudButton Variant="Variant.Filled" Color="Color.Primary"
+                       FullWidth="true" OnClick="AddCharacter"
+                       Disabled="@(string.IsNullOrWhiteSpace(_newCharName))">
+                Add Character
+            </MudButton>
+
+            <MudDivider Class="my-4" />
+            <MudText Typo="Typo.h6" Class="mb-2">Place Entry</MudText>
+
+            <MudSelect T="string" Label="Character" @bind-Value="_formCharacterId"
+                       Variant="Variant.Outlined" Class="mb-2">
+                @foreach (var c in _data.Characters)
+                {
+                    <MudSelectItem Value="@c.Id">@c.Name</MudSelectItem>
+                }
+            </MudSelect>
+
+            <MudNumericField T="int" Label="Page Number" @bind-Value="_formPage"
+                             Variant="Variant.Outlined" Class="mb-2"
+                             Min="1" Max="@_data.TotalPages" />
+
+            <MudTextField @bind-Value="_formLocation" Label="Location"
+                          Variant="Variant.Outlined" Class="mb-2" />
+
+            <MudTextField @bind-Value="_formNote" Label="Note (optional)"
+                          Variant="Variant.Outlined" Class="mb-2" />
+
+            @if (_pendingX.HasValue)
+            {
+                <MudAlert Severity="Severity.Success" Class="mb-2">
+                    Pin placed at @($"{_pendingX:F1}")%, @($"{_pendingY:F1}")%
+                </MudAlert>
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Info" Class="mb-2">
+                    Click the map to place a pin
+                </MudAlert>
+            }
+
+            <MudButton Variant="Variant.Filled" Color="Color.Success"
+                       FullWidth="true" OnClick="AddEntry"
+                       Disabled="@(!CanAddEntry)">
+                Add Entry
+            </MudButton>
+
+            @if (_selectedEntry != null)
+            {
+                <MudButton Variant="Variant.Outlined" Color="Color.Error"
+                           FullWidth="true" Class="mt-2"
+                           StartIcon="@Icons.Material.Filled.Delete"
+                           OnClick="DeleteSelected">
+                    Delete Selected Marker
+                </MudButton>
+                <MudText Typo="Typo.caption" Class="mt-1">
+                    Selected: @(_data.Characters.FirstOrDefault(c => c.Id == _selectedEntry.CharacterId)?.Name) — @_selectedEntry.Location (p.@_selectedEntry.Page)
+                </MudText>
+            }
+        </MudPaper>
+    </MudItem>
+
+    <MudItem xs="9">
+        <MudPaper Elevation="2" Class="pa-2">
+            <div style="position: relative; display: inline-block; width: 100%; cursor: crosshair;"
+                 @ref="_mapRef"
+                 @onclick="HandleMapClick">
+
+                <MudImage Src="Images/Maps/inheritance_original_map.jpg"
+                          Fluid="true" ObjectFit="ObjectFit.Contain" Alt="Map" />
+
+                @foreach (var entry in _data.Entries)
+                {
+                    var character = _data.Characters.FirstOrDefault(c => c.Id == entry.CharacterId);
+                    if (character == null) continue;
+                    var capturedEntry = entry;
+                    <MudTooltip Text="@($"{character.Name} — {entry.Location} (p.{entry.Page})")">
+                        <MudIconButton Icon="@Icons.Material.Filled.Place"
+                                       Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color};")"
+                                       OnClick="@((e) => { SelectEntry(capturedEntry); })" />
+                    </MudTooltip>
+                }
+
+                @if (_pendingX.HasValue)
+                {
+                    <MudIcon Icon="@Icons.Material.Filled.AddLocation"
+                             Style="@($"position:absolute; left:{_pendingX:F2}%; top:{_pendingY:F2}%; transform:translate(-50%,-100%); color:#f59e0b; pointer-events:none; font-size:2rem;")" />
+                }
+            </div>
+        </MudPaper>
+    </MudItem>
+</MudGrid>
+
+<MudPaper Elevation="2" Class="pa-4 mt-4">
+    <MudText Typo="Typo.h6" Class="mb-2">Entries (@_data.Entries.Count)</MudText>
+    <MudTable Items="_data.Entries" Dense="true" Hover="true" Striped="true" T="MapEntry">
+        <HeaderContent>
+            <MudTh>Character</MudTh>
+            <MudTh>Page</MudTh>
+            <MudTh>Progress</MudTh>
+            <MudTh>Location</MudTh>
+            <MudTh>X</MudTh>
+            <MudTh>Y</MudTh>
+            <MudTh>Note</MudTh>
+            <MudTh></MudTh>
+        </HeaderContent>
+        <RowTemplate>
+            <MudTd>@(_data.Characters.FirstOrDefault(c => c.Id == context.CharacterId)?.Name ?? "?")</MudTd>
+            <MudTd>@context.Page</MudTd>
+            <MudTd>@($"{context.Progress:P1}")</MudTd>
+            <MudTd>@context.Location</MudTd>
+            <MudTd>@($"{context.X:F1}")</MudTd>
+            <MudTd>@($"{context.Y:F1}")</MudTd>
+            <MudTd>@context.Note</MudTd>
+            <MudTd>
+                <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                               Size="Size.Small" Color="Color.Error"
+                               OnClick="() => RemoveEntry(context)" />
+            </MudTd>
+        </RowTemplate>
+    </MudTable>
+</MudPaper>
+
+<MudPaper Elevation="2" Class="pa-4 mt-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
+        <MudText Typo="Typo.h6" Style="flex:1">JSON Output</MudText>
+        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="CopyJson">Copy</MudButton>
+    </MudStack>
+    <MudTextField Value="@_json" Variant="Variant.Outlined" Lines="12" ReadOnly="true" />
+</MudPaper>
+
+@code {
+    private MapEntry? _selectedEntry;
+    private MapData _data = new();
+    private ElementReference _mapRef;
+    private string _json = "";
+
+    private string _newCharName = "";
+    private string _newCharColor = "#3b82f6";
+
+    private string _formCharacterId = "";
+    private int _formPage = 1;
+    private string _formLocation = "";
+    private string _formNote = "";
+    private double? _pendingX;
+    private double? _pendingY;
+
+    private bool CanAddEntry =>
+        !string.IsNullOrWhiteSpace(_formCharacterId) &&
+        !string.IsNullOrWhiteSpace(_formLocation) &&
+        _pendingX.HasValue;
+
+    protected override async Task OnInitializedAsync()
+    {
+        try
+        {
+            _data = await Http.GetFromJsonAsync<MapData>("data/mapdata.json") ?? new();
+        }
+        catch
+        {
+            _data = new();
+        }
+        RefreshJson();
+    }
+
+    private async Task HandleMapClick(MouseEventArgs e)
+    {
+        var result = await JS.InvokeAsync<ClickResult>(
+            "mapHelper.getClickPercentage", _mapRef, e.ClientX, e.ClientY);
+        _pendingX = result.X;
+        _pendingY = result.Y;
+    }
+
+    private void AddCharacter()
+    {
+        if (string.IsNullOrWhiteSpace(_newCharName)) return;
+        _data.Characters.Add(new CharacterModel
+        {
+            Id = Guid.NewGuid().ToString(),
+            Name = _newCharName.Trim(),
+            Color = _newCharColor
+        });
+        _newCharName = "";
+        _newCharColor = "#3b82f6";
+        RefreshJson();
+    }
+
+    private void RemoveCharacter(CharacterModel c)
+    {
+        _data.Characters.Remove(c);
+        _data.Entries.RemoveAll(e => e.CharacterId == c.Id);
+        RefreshJson();
+    }
+
+    private void AddEntry()
+    {
+        if (!CanAddEntry) return;
+        _data.Entries.Add(new MapEntry
+        {
+            CharacterId = _formCharacterId,
+            Page = _formPage,
+            Progress = Math.Round((double)_formPage / _data.TotalPages, 4),
+            Location = _formLocation.Trim(),
+            X = Math.Round(_pendingX!.Value, 2),
+            Y = Math.Round(_pendingY!.Value, 2),
+            Note = _formNote.Trim()
+        });
+        _data.Entries = _data.Entries.OrderBy(e => e.CharacterId).ThenBy(e => e.Page).ToList();
+        _pendingX = null;
+        _pendingY = null;
+        _formLocation = "";
+        _formNote = "";
+        RefreshJson();
+    }
+
+    private void RemoveEntry(MapEntry entry)
+    {
+        _data.Entries.Remove(entry);
+        RefreshJson();
+    }
+
+    private void DeleteSelected()
+    {
+        if (_selectedEntry == null) return;
+        _data.Entries.Remove(_selectedEntry);
+        _selectedEntry = null;
+        RefreshJson();
+        StateHasChanged();
+    }
+
+    private void SelectEntry(MapEntry entry)
+    {
+        _selectedEntry = entry;
+        _formCharacterId = entry.CharacterId;
+        _formPage = entry.Page;
+        _formLocation = entry.Location;
+        _formNote = entry.Note;
+    }
+
+    private void RefreshJson()
+    {
+        _json = JsonSerializer.Serialize(_data, new JsonSerializerOptions
+        {
+            WriteIndented = true
+        });
+    }
+
+    private async Task CopyJson()
+    {
+        await JS.InvokeVoidAsync("navigator.clipboard.writeText", _json);
+    }
+
+    private record ClickResult(double X, double Y);
+}
