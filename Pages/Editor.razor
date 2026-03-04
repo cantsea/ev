@@ -22,7 +22,7 @@
 </MudPaper>
 
 <MudGrid>
-    <MudItem xs="3">
+    <MudItem xs="12" md="3">
         <MudPaper Elevation="2" Class="pa-4" Style="height:100%;">
 
             <MudText Typo="Typo.h6" Class="mb-2">Book Settings</MudText>
@@ -74,7 +74,7 @@
             <MudDivider Class="my-4" />
         </MudPaper>
     </MudItem>
-    <MudItem xs="3">
+    <MudItem xs="12" md="3">
         <MudPaper Elevation="2" Class="pa-4" Style="height:100%;">
             <MudText Typo="Typo.h6" Class="mb-2">Location Presets</MudText>
             <MudTextField @bind-Value="_newPresetName" Label="Location Name"
@@ -165,7 +165,7 @@
         </MudPaper>
     </MudItem>
 
-    <MudItem xs="6">
+    <MudItem xs="12" md="6">
         <MudPaper Elevation="2" Class="pa-2">
             <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2 px-2">
                 <MudText Typo="Typo.caption" Color="Color.Secondary">
@@ -177,7 +177,7 @@
                 <MudIconButton Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" OnClick="ResetZoom" />
             </MudStack>
 
-            <div id="editor-map-wrapper" style="overflow: hidden; width: 100%; touch-action: none;">
+            <div id="editor-map-wrapper" style="overflow: hidden; width: 100%; touch-action: none; min-height: 250px;">
                 <div id="editor-map-inner" style="position: relative; display: inline-block; width: 100%; cursor: crosshair;"
                      @onclick="HandleMapClick">
 
@@ -256,94 +256,98 @@
 
 <MudPaper Elevation="2" Class="pa-4 mt-4">
     <MudText Typo="Typo.h6" Class="mb-2">Characters & Presets</MudText>
-    <MudTable Items="CharacterAndPresetRows" Dense="true" Hover="true" Striped="true" T="TableRow"
-              SortLabel="Sort By">
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Name</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
-            <MudTh>Color</MudTh>
-            <MudTh></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd>
-                @if (context.Type == "Character")
-                {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Primary">Character</MudChip>
-                }
-                else
-                {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Warning">Preset</MudChip>
-                }
-            </MudTd>
-            <MudTd>@context.Label</MudTd>
-            <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
-            <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
-            <MudTd>
-                @if (context.Source is CharacterModel cm)
-                {
-                    var captured = cm;
-                    <input type="color" value="@cm.Color"
-                           style="width:28px; height:28px; border:none; cursor:pointer; border-radius:4px;"
-                           @onchange="e => UpdateCharacterColor(captured, e.Value?.ToString() ?? captured.Color)" />
-                }
-                else
-                {
-                    <span>—</span>
-                }
-            </MudTd>
-            <MudTd>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                               Size="Size.Small" Color="Color.Error"
-                               OnClick="() => DeleteRow(context)" />
-            </MudTd>
-        </RowTemplate>
-    </MudTable>
+    <div style="overflow-x:auto;">
+        <MudTable Items="CharacterAndPresetRows" Dense="true" Hover="true" Striped="true" T="TableRow"
+                  SortLabel="Sort By">
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Name</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
+                <MudTh>Color</MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    @if (context.Type == "Character")
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Primary">Character</MudChip>
+                    }
+                    else
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Warning">Preset</MudChip>
+                    }
+                </MudTd>
+                <MudTd>@context.Label</MudTd>
+                <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
+                <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
+                <MudTd>
+                    @if (context.Source is CharacterModel cm)
+                    {
+                        var captured = cm;
+                        <input type="color" value="@cm.Color"
+                               style="width:28px; height:28px; border:none; cursor:pointer; border-radius:4px;"
+                               @onchange="e => UpdateCharacterColor(captured, e.Value?.ToString() ?? captured.Color)" />
+                    }
+                    else
+                    {
+                        <span>—</span>
+                    }
+                </MudTd>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Size="Size.Small" Color="Color.Error"
+                                   OnClick="() => DeleteRow(context)" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
 </MudPaper>
 
 <MudPaper Elevation="2" Class="pa-4 mt-4">
     <MudText Typo="Typo.h6" Class="mb-2">Entries & Chapters (@FilteredEntryAndChapterRows.Count)</MudText>
-    <MudTable Items="FilteredEntryAndChapterRows" Dense="true" Hover="true" Striped="true" T="TableRow"
-              SortLabel="Sort By">
-        <HeaderContent>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Character)">Character</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page)" InitialDirection="SortDirection.Ascending">Page</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Progress)">Progress</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Location / Chapter</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Note)">Note</MudTableSortLabel></MudTh>
-            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Invisible)">Invisible</MudTableSortLabel></MudTh>
-            <MudTh></MudTh>
-        </HeaderContent>
-        <RowTemplate>
-            <MudTd>
-                @if (context.Type == "Chapter")
-                {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Secondary">Chapter</MudChip>
-                }
-                else
-                {
-                    <MudChip T="string" Size="Size.Small" Color="Color.Primary">Entry</MudChip>
-                }
-            </MudTd>
-            <MudTd>@context.Character</MudTd>
-            <MudTd>@(context.Page > 0 ? context.Page.ToString() : "—")</MudTd>
-            <MudTd>@(context.Progress > 0 ? $"{context.Progress:P1}" : "—")</MudTd>
-            <MudTd>@context.Label</MudTd>
-            <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
-            <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
-            <MudTd>@context.Note</MudTd>
-            <MudTd>@(context.Invisible ? "✓" : "")</MudTd>
-            <MudTd>
-                <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                               Size="Size.Small" Color="Color.Error"
-                               OnClick="() => DeleteRow(context)" />
-            </MudTd>
-        </RowTemplate>
-    </MudTable>
+    <div style="overflow-x:auto;">
+        <MudTable Items="FilteredEntryAndChapterRows" Dense="true" Hover="true" Striped="true" T="TableRow"
+                  SortLabel="Sort By">
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Character)">Character</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page)" InitialDirection="SortDirection.Ascending">Page</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Progress)">Progress</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Location / Chapter</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Note)">Note</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Invisible)">Invisible</MudTableSortLabel></MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    @if (context.Type == "Chapter")
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Secondary">Chapter</MudChip>
+                    }
+                    else
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Primary">Entry</MudChip>
+                    }
+                </MudTd>
+                <MudTd>@context.Character</MudTd>
+                <MudTd>@(context.Page > 0 ? context.Page.ToString() : "—")</MudTd>
+                <MudTd>@(context.Progress > 0 ? $"{context.Progress:P1}" : "—")</MudTd>
+                <MudTd>@context.Label</MudTd>
+                <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
+                <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
+                <MudTd>@context.Note</MudTd>
+                <MudTd>@(context.Invisible ? "✓" : "")</MudTd>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Size="Size.Small" Color="Color.Error"
+                                   OnClick="() => DeleteRow(context)" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
 </MudPaper>
 
 <MudPaper Elevation="2" Class="pa-4 mt-4">
