@@ -316,7 +316,7 @@
     {
         try
         {
-            _data = await Http.GetFromJsonAsync<MapData>("data/mapdata.json") ?? new();
+            _data = await Http.GetFromJsonAsync<MapData>("data/mapData.json") ?? new();
         }
         catch { _data = new(); }
         RefreshJson();
