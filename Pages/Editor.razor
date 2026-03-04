@@ -3,33 +3,33 @@
 @inject HttpClient Http
 @using ev.Models
 @using System.Text.Json
-@using System.Text.Json.Serialization
 
 <MudText Typo="Typo.h5" Class="mb-4">Editor</MudText>
 
 <MudGrid>
     <MudItem xs="3">
         <MudPaper Elevation="2" Class="pa-4" Style="height:100%;">
+
             <MudText Typo="Typo.h6" Class="mb-2">Book Settings</MudText>
             <MudNumericField T="int" Label="Total Pages" @bind-Value="_data.TotalPages"
                              Variant="Variant.Outlined" Class="mb-4"
                              OnBlur="RefreshJson" />
 
             <MudDivider Class="mb-4" />
-            <MudText Typo="Typo.h6" Class="mb-2">Characters</MudText>
 
+            <MudText Typo="Typo.h6" Class="mb-2">Characters</MudText>
             @foreach (var c in _data.Characters)
             {
+                var captured = c;
                 <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
-                    <MudIcon Icon="@Icons.Material.Filled.Circle"
-                             Style="@($"color:{c.Color}")" />
+                    <input type="color" value="@c.Color"
+                           style="width:32px; height:32px; border:none; cursor:pointer; border-radius:4px;"
+                           @onchange="e => UpdateCharacterColor(captured, e.Value?.ToString() ?? captured.Color)" />
                     <MudText Style="flex:1">@c.Name</MudText>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                   Size="Size.Small"
-                                   OnClick="() => RemoveCharacter(c)" />
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete" Size="Size.Small"
+                                   OnClick="() => RemoveCharacter(captured)" />
                 </MudStack>
             }
-
             <MudTextField @bind-Value="_newCharName" Label="Name"
                           Variant="Variant.Outlined" Class="mb-2" />
             <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
@@ -44,8 +44,23 @@
             </MudButton>
 
             <MudDivider Class="my-4" />
-            <MudText Typo="Typo.h6" Class="mb-2">Place Entry</MudText>
 
+            <MudText Typo="Typo.h6" Class="mb-2">Add Chapter</MudText>
+            <MudNumericField T="int" Label="Chapter Number" @bind-Value="_newChapterNumber"
+                             Variant="Variant.Outlined" Class="mb-2" Min="1" />
+            <MudTextField @bind-Value="_newChapterName" Label="Chapter Name"
+                          Variant="Variant.Outlined" Class="mb-2" />
+            <MudNumericField T="int" Label="Starting Page" @bind-Value="_newChapterPage"
+                             Variant="Variant.Outlined" Class="mb-2" Min="1" Max="@_data.TotalPages" />
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary"
+                       FullWidth="true" OnClick="AddChapter"
+                       Disabled="@(string.IsNullOrWhiteSpace(_newChapterName))">
+                Add Chapter
+            </MudButton>
+
+            <MudDivider Class="my-4" />
+
+            <MudText Typo="Typo.h6" Class="mb-2">Place Entry</MudText>
             <MudSelect T="string" Label="Character" @bind-Value="_formCharacterId"
                        Variant="Variant.Outlined" Class="mb-2">
                 @foreach (var c in _data.Characters)
@@ -53,16 +68,15 @@
                     <MudSelectItem Value="@c.Id">@c.Name</MudSelectItem>
                 }
             </MudSelect>
-
             <MudNumericField T="int" Label="Page Number" @bind-Value="_formPage"
                              Variant="Variant.Outlined" Class="mb-2"
                              Min="1" Max="@_data.TotalPages" />
-
             <MudTextField @bind-Value="_formLocation" Label="Location"
                           Variant="Variant.Outlined" Class="mb-2" />
-
             <MudTextField @bind-Value="_formNote" Label="Note (optional)"
                           Variant="Variant.Outlined" Class="mb-2" />
+            <MudCheckBox T="bool" @bind-Value="_formIsInvisible" Class="mb-2"
+                         Label="Invisible marker (curve helper)" />
 
             @if (_pendingX.HasValue)
             {
@@ -93,8 +107,13 @@
                 </MudButton>
                 <MudText Typo="Typo.caption" Class="mt-1">
                     Selected: @(_data.Characters.FirstOrDefault(c => c.Id == _selectedEntry.CharacterId)?.Name) — @_selectedEntry.Location (p.@_selectedEntry.Page)
+                    @if (_selectedEntry.IsInvisible)
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Default">invisible</MudChip>
+                    }
                 </MudText>
             }
+
         </MudPaper>
     </MudItem>
 
@@ -107,21 +126,51 @@
                 <MudImage Src="Images/Maps/inheritance_original_map.jpg"
                           Fluid="true" ObjectFit="ObjectFit.Contain" Alt="Map" />
 
+                <svg style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
+                    @foreach (var character in _data.Characters)
+                    {
+                        var ordered = _data.Entries
+                        .Where(e => e.CharacterId == character.Id)
+                        .OrderBy(e => e.Progress).ToList();
+                        for (int i = 0; i < ordered.Count - 1; i++)
+                        {
+                            var a = ordered[i]; var b = ordered[i + 1];
+                            <line x1="@($"{a.X:F2}%")" y1="@($"{a.Y:F2}%")"
+                                  x2="@($"{b.X:F2}%")" y2="@($"{b.Y:F2}%")"
+                                  stroke="@character.Color" stroke-width="1"
+                                  stroke-dasharray="4 3" stroke-opacity="0.4" />
+                        }
+                    }
+                </svg>
+
                 @foreach (var entry in _data.Entries)
                 {
                     var character = _data.Characters.FirstOrDefault(c => c.Id == entry.CharacterId);
                     if (character == null) continue;
                     var capturedEntry = entry;
-                    <MudTooltip Text="@($"{character.Name} — {entry.Location} (p.{entry.Page})")">
-                        <MudIconButton Icon="@Icons.Material.Filled.Place"
-                                       Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color};")"
-                                       OnClick="@((e) => { SelectEntry(capturedEntry); })" />
-                    </MudTooltip>
+                    var isSelected = _selectedEntry == entry;
+
+                    @if (entry.IsInvisible)
+                    {
+                        <MudTooltip Text="@($"{character.Name} — {entry.Location} (p.{entry.Page}) [invisible]")">
+                            <MudIconButton Icon="@Icons.Material.Filled.RadioButtonUnchecked"
+                                           Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:{character.Color}; opacity:{(isSelected ? "1.0" : "0.5")};")"
+                                           OnClick="@((e) => SelectEntry(capturedEntry))" />
+                        </MudTooltip>
+                    }
+                    else
+                    {
+                        <MudTooltip Text="@($"{character.Name} — {entry.Location} (p.{entry.Page})")">
+                            <MudIconButton Icon="@Icons.Material.Filled.Place"
+                                           Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color}; opacity:{(isSelected ? "1.0" : "0.75")};")"
+                                           OnClick="@((e) => SelectEntry(capturedEntry))" />
+                        </MudTooltip>
+                    }
                 }
 
                 @if (_pendingX.HasValue)
                 {
-                    <MudIcon Icon="@Icons.Material.Filled.AddLocation"
+                    <MudIcon Icon="@(_formIsInvisible? Icons.Material.Filled.RadioButtonUnchecked : Icons.Material.Filled.AddLocation)"
                              Style="@($"position:absolute; left:{_pendingX:F2}%; top:{_pendingY:F2}%; transform:translate(-50%,-100%); color:#f59e0b; pointer-events:none; font-size:2rem;")" />
                 }
             </div>
@@ -130,30 +179,44 @@
 </MudGrid>
 
 <MudPaper Elevation="2" Class="pa-4 mt-4">
-    <MudText Typo="Typo.h6" Class="mb-2">Entries (@_data.Entries.Count)</MudText>
-    <MudTable Items="_data.Entries" Dense="true" Hover="true" Striped="true" T="MapEntry">
+    <MudText Typo="Typo.h6" Class="mb-2">All Entries & Chapters (@UnifiedRows.Count)</MudText>
+    <MudTable Items="UnifiedRows" Dense="true" Hover="true" Striped="true" T="TableRow"
+              SortLabel="Sort By">
         <HeaderContent>
-            <MudTh>Character</MudTh>
-            <MudTh>Page</MudTh>
-            <MudTh>Progress</MudTh>
-            <MudTh>Location</MudTh>
-            <MudTh>X</MudTh>
-            <MudTh>Y</MudTh>
-            <MudTh>Note</MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Character)">Character</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page)" InitialDirection="SortDirection.Ascending">Page</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Progress)">Progress</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Location / Chapter</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Note)">Note</MudTableSortLabel></MudTh>
+            <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Invisible)">Invisible</MudTableSortLabel></MudTh>
             <MudTh></MudTh>
         </HeaderContent>
         <RowTemplate>
-            <MudTd>@(_data.Characters.FirstOrDefault(c => c.Id == context.CharacterId)?.Name ?? "?")</MudTd>
+            <MudTd>
+                @if (context.Type == "Chapter")
+                {
+                    <MudChip T="string" Size="Size.Small" Color="Color.Secondary">Chapter</MudChip>
+                }
+                else
+                {
+                    <MudChip T="string" Size="Size.Small" Color="Color.Primary">Entry</MudChip>
+                }
+            </MudTd>
+            <MudTd>@context.Character</MudTd>
             <MudTd>@context.Page</MudTd>
             <MudTd>@($"{context.Progress:P1}")</MudTd>
-            <MudTd>@context.Location</MudTd>
-            <MudTd>@($"{context.X:F1}")</MudTd>
-            <MudTd>@($"{context.Y:F1}")</MudTd>
+            <MudTd>@context.Label</MudTd>
+            <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
+            <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
             <MudTd>@context.Note</MudTd>
+            <MudTd>@(context.Invisible ? "✓" : "")</MudTd>
             <MudTd>
                 <MudIconButton Icon="@Icons.Material.Filled.Delete"
                                Size="Size.Small" Color="Color.Error"
-                               OnClick="() => RemoveEntry(context)" />
+                               OnClick="() => DeleteRow(context)" />
             </MudTd>
         </RowTemplate>
     </MudTable>
@@ -176,10 +239,15 @@
     private string _newCharName = "";
     private string _newCharColor = "#3b82f6";
 
+    private int _newChapterNumber = 1;
+    private string _newChapterName = "";
+    private int _newChapterPage = 1;
+
     private string _formCharacterId = "";
     private int _formPage = 1;
     private string _formLocation = "";
     private string _formNote = "";
+    private bool _formIsInvisible = false;
     private double? _pendingX;
     private double? _pendingY;
 
@@ -188,16 +256,69 @@
         !string.IsNullOrWhiteSpace(_formLocation) &&
         _pendingX.HasValue;
 
+    // Unified row model for the table
+    private record TableRow(
+        string Type,
+        string Character,
+        int Page,
+        double Progress,
+        string Label,
+        double? X,
+        double? Y,
+        string Note,
+        bool Invisible,
+        object Source
+    );
+
+    private List<TableRow> UnifiedRows =>
+        _data.Entries.Select(e => new TableRow(
+            Type: "Entry",
+            Character: _data.Characters.FirstOrDefault(c => c.Id == e.CharacterId)?.Name ?? "?",
+            Page: e.Page,
+            Progress: e.Progress,
+            Label: e.Location,
+            X: e.X,
+            Y: e.Y,
+            Note: e.Note,
+            Invisible: e.IsInvisible,
+            Source: e
+        ))
+        .Concat(_data.Chapters.Select(ch => new TableRow(
+            Type: "Chapter",
+            Character: "",
+            Page: ch.Page,
+            Progress: ch.GetProgress(_data.TotalPages),
+            Label: $"Ch. {ch.Number} — {ch.Name}",
+            X: null,
+            Y: null,
+            Note: "",
+            Invisible: false,
+            Source: ch
+        )))
+        .ToList();
+
+    private void DeleteRow(TableRow row)
+    {
+        if (row.Source is MapEntry entry)
+        {
+            _data.Entries.Remove(entry);
+            if (_selectedEntry == entry) _selectedEntry = null;
+        }
+        else if (row.Source is ChapterModel chapter)
+        {
+            _data.Chapters.Remove(chapter);
+        }
+        RefreshJson();
+        StateHasChanged();
+    }
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
             _data = await Http.GetFromJsonAsync<MapData>("data/mapdata.json") ?? new();
         }
-        catch
-        {
-            _data = new();
-        }
+        catch { _data = new(); }
         RefreshJson();
     }
 
@@ -207,6 +328,13 @@
             "mapHelper.getClickPercentage", _mapRef, e.ClientX, e.ClientY);
         _pendingX = result.X;
         _pendingY = result.Y;
+    }
+
+    private void UpdateCharacterColor(CharacterModel character, string newColor)
+    {
+        character.Color = newColor;
+        RefreshJson();
+        StateHasChanged();
     }
 
     private void AddCharacter()
@@ -230,6 +358,22 @@
         RefreshJson();
     }
 
+    private void AddChapter()
+    {
+        if (string.IsNullOrWhiteSpace(_newChapterName)) return;
+        _data.Chapters.RemoveAll(c => c.Number == _newChapterNumber);
+        _data.Chapters.Add(new ChapterModel
+        {
+            Number = _newChapterNumber,
+            Name = _newChapterName.Trim(),
+            Page = _newChapterPage
+        });
+        _data.Chapters = _data.Chapters.OrderBy(c => c.Number).ToList();
+        _newChapterNumber = _data.Chapters.Max(c => c.Number) + 1;
+        _newChapterName = "";
+        RefreshJson();
+    }
+
     private void AddEntry()
     {
         if (!CanAddEntry) return;
@@ -241,13 +385,15 @@
             Location = _formLocation.Trim(),
             X = Math.Round(_pendingX!.Value, 2),
             Y = Math.Round(_pendingY!.Value, 2),
-            Note = _formNote.Trim()
+            Note = _formNote.Trim(),
+            IsInvisible = _formIsInvisible
         });
         _data.Entries = _data.Entries.OrderBy(e => e.CharacterId).ThenBy(e => e.Page).ToList();
         _pendingX = null;
         _pendingY = null;
         _formLocation = "";
         _formNote = "";
+        _formIsInvisible = false;
         RefreshJson();
     }
 
@@ -273,14 +419,12 @@
         _formPage = entry.Page;
         _formLocation = entry.Location;
         _formNote = entry.Note;
+        _formIsInvisible = entry.IsInvisible;
     }
 
     private void RefreshJson()
     {
-        _json = JsonSerializer.Serialize(_data, new JsonSerializerOptions
-        {
-            WriteIndented = true
-        });
+        _json = JsonSerializer.Serialize(_data, new JsonSerializerOptions { WriteIndented = true });
     }
 
     private async Task CopyJson()
