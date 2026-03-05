@@ -45,7 +45,7 @@
         }
         else
         {
-            <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;">No chapters loaded yet.</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Primary" Style="text-align:center;">No chapters loaded yet.</MudText>
         }
     </MudPaper>
 
@@ -67,7 +67,7 @@
                 }
                 else
                 {
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;" Class="mb-4">No Chapters Yet</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Primary" Style="text-align:center;" Class="mb-4">No Chapters Yet</MudText>
                 }
 
                 <MudDivider Class="mb-4" />
@@ -266,7 +266,7 @@
                                         lastChapterShown = entryChapter;
                                         <MudTimelineItem Color="Color.Default" Size="Size.Small" Style="opacity:0.5">
                                             <ItemContent>
-                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-align:center;">
+                                                <MudText Typo="Typo.caption" Color="Color.Primary" Style="text-align:center;">
                                                     ── @entryChapter.Name ──
                                                 </MudText>
                                             </ItemContent>
@@ -280,7 +280,7 @@
                                             <MudText Typo="Typo.caption" Style="text-align:center;">p.@entry.Page</MudText>
                                             @if (!string.IsNullOrEmpty(entry.Note))
                                             {
-                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-align:center;">@entry.Note</MudText>
+                                                <MudText Typo="Typo.caption" Color="Color.Primary" Style="text-align:center;">@entry.Note</MudText>
                                             }
                                         </ItemContent>
                                     </MudTimelineItem>
