@@ -24,7 +24,7 @@
             <MudText Typo="Typo.h6">ev</MudText>
         </MudDrawerHeader>
         <MudNavMenu>
-            <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Map">
+            <MudNavLink Href="" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Home">
                 Home
             </MudNavLink>
             <MudNavLink Href="/Maps/Eragon" Match="NavLinkMatch.All" Icon="@Icons.Material.Filled.Map">
@@ -47,7 +47,9 @@
 
     <MudMainContent>
         <MudContainer MaxWidth="MaxWidth.False" Class="pa-4">
-            @Body
+            <CascadingValue Value="_darkMode" Name="IsDarkMode">
+                @Body
+            </CascadingValue>
         </MudContainer>
     </MudMainContent>
 </MudLayout>
@@ -55,13 +57,17 @@
 @code {
     private bool _drawerOpen = true;
     private bool _darkMode = true;
-    private string _pageTitle = "Map";
+    private string _pageTitle = "Home";
     private MudTheme _theme = new();
 
     private static readonly Dictionary<string, string> _pageTitles = new()
     {
-        { "", "Map" },
-        { "editor", "Editor" },
+        { "",                  "Home" },
+        { "maps/eragon",       "Eragon Map" },
+        { "maps/eldest",       "Eldest Map" },
+        { "maps/brisingr",     "Brisingr Map" },
+        { "maps/inheritance",  "Inheritance Map" },
+        { "editor",            "Editor" },
     };
 
     protected override void OnInitialized()
