@@ -9,13 +9,13 @@
         {
             var chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
             <div class="d-none d-md-block">
-                <MudSlider T="int" Min="1" Max="@(chapters.Count + 1)" Step="1"
+                <MudSlider T="int" Min="1" Max="@(chapters.Count)" Step="1"
                            @bind-Value="_chapterIndex"
                            Color="Color.Primary"
                            TickMarks="true" />
             </div>
             <div class="d-md-none">
-                <MudSlider T="int" Min="1" Max="@(chapters.Count + 1)" Step="1"
+                <MudSlider T="int" Min="1" Max="@(chapters.Count)" Step="1"
                            @bind-Value="_chapterIndex"
                            Color="Color.Primary"
                            TickMarks="true" />
@@ -23,7 +23,7 @@
         }
         else
         {
-            <MudText Typo="Typo.body2" Color="Color.Primary" Style="text-align:center;">No chapters loaded yet.</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;">No chapters loaded yet.</MudText>
         }
     </MudPaper>
 
@@ -33,14 +33,20 @@
             <MudPaper Elevation="2" Class="pa-4" Style="height:100%;">
 
                 <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">Current Chapter</MudText>
-                <MudSelect T="int" @bind-Value="_chapterIndex" Variant="Variant.Outlined" Class="mb-4">
-                    @foreach (var chapter in _data.Chapters.OrderBy(c => c.Page))
-                    {
-                        var index = _data.Chapters.OrderBy(c => c.Page).ToList().IndexOf(chapter) + 1;
-                        <MudSelectItem T="int" Value="@index">@chapter.Name</MudSelectItem>
-                    }
-                    <MudSelectItem T="int" Value="@(_data.Chapters.Count + 1)">End</MudSelectItem>
-                </MudSelect>
+                @if (_data.Chapters.Any())
+                {
+                    <MudSelect T="int" @bind-Value="_chapterIndex" Variant="Variant.Outlined" Class="mb-4">
+                        @foreach (var chapter in _data.Chapters.OrderBy(c => c.Page))
+                        {
+                            var index = _data.Chapters.OrderBy(c => c.Page).ToList().IndexOf(chapter) + 1;
+                            <MudSelectItem T="int" Value="@index">@chapter.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                else
+                {
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;" Class="mb-4">No Chapters Yet</MudText>
+                }
 
                 <MudDivider Class="mb-4" />
 
@@ -108,11 +114,8 @@
         <MudItem xs="12" md="9">
             <MudPaper Elevation="2" Class="pa-2">
                 <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2 px-2">
-                    <MudText Typo="Typo.caption" Color="Color.Primary">
-                        Scroll to zoom | Drag to pan | Click a marker to select | 
-                        <MudLink Href="https://www.paolini.net/wp-content/uploads/2016/06/MapAlagaesia.jpg"
-                                 Target="_blank" Typo="Typo.caption">Map Source</MudLink>
-                    </MudText>                    <MudSpacer />
+                    <MudText Typo="Typo.caption" Color="Color.Primary">Scroll to zoom · Drag to pan · Click a marker to select</MudText>
+                    <MudSpacer />
                     <MudIconButton Icon="@Icons.Material.Filled.ZoomIn" Size="Size.Small" OnClick="ZoomIn" />
                     <MudIconButton Icon="@Icons.Material.Filled.ZoomOut" Size="Size.Small" OnClick="ZoomOut" />
                     <MudIconButton Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" OnClick="ResetZoom" />
@@ -201,18 +204,9 @@
                 <MudItem xs="12" sm="6" md="2">
                     <MudText Typo="Typo.subtitle2" Class="mb-1" Style="text-align:center;">📖 Book Progress</MudText>
                     <MudTimeline TimelinePosition="TimelinePosition.Start">
-                        @if (IsEnd)
-                        {
-                            <MudTimelineItem Color="Color.Primary" Size="Size.Small">
-                                <ItemContent>
-                                    <MudText Typo="Typo.body2" Style="text-align:center;"><strong>End</strong></MudText>
-                                    <MudText Typo="Typo.caption" Style="text-align:center;">All entries shown</MudText>
-                                </ItemContent>
-                            </MudTimelineItem>
-                        }
                         @foreach (var chapter in PastChapters)
                         {
-                            var isCurrent = !IsEnd && chapter == SelectedChapter;
+                            var isCurrent = chapter == SelectedChapter;
                             <MudTimelineItem Color="@(isCurrent? Color.Primary: Color.Default)" Size="Size.Small"
                                              Style="@($"opacity:{(isCurrent ? "1.0" : "0.5")}")">
                                 <ItemContent>
@@ -284,7 +278,6 @@
     [Parameter] public string DataFile { get; set; } = "";
     [Parameter] public string PrimaryColor { get; set; } = "#6750A4";
 
-    // Each instance gets unique IDs so multiple maps on the same page won't conflict
     private string _mapWrapperId = Guid.NewGuid().ToString("N");
     private string _mapInnerId = Guid.NewGuid().ToString("N");
 
@@ -326,12 +319,8 @@
         }
     }
 
-    private bool IsEnd => _chapterIndex > _data.Chapters.Count;
-
     private ChapterModel? SelectedChapter =>
-        _data.Chapters.Any()
-            ? _data.Chapters.OrderBy(c => c.Page).ElementAtOrDefault(_chapterIndex - 1)
-            : null;
+        _data.Chapters.OrderBy(c => c.Page).ElementAtOrDefault(_chapterIndex - 1);
 
     private List<ChapterModel> PastChapters =>
         _data.Chapters.OrderByDescending(c => c.Page).ToList();
@@ -382,6 +371,7 @@
             _data = await Http.GetFromJsonAsync<MapData>($"{DataFile}?v={DateTime.UtcNow.Ticks}") ?? new();
         }
         catch { _data = new(); }
+        StateHasChanged();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
@@ -412,7 +402,7 @@
     {
         return _data.Entries
             .Where(e => e.CharacterId == characterId &&
-                        (!_data.Chapters.Any() || IsEnd || e.Page < SelectedChapter!.Page))
+                        (SelectedChapter == null || e.Page < SelectedChapter.Page))
             .OrderByDescending(e => e.Page)
             .Take(5)
             .ToList();
@@ -424,4 +414,3 @@
         return index < opacities.Length ? opacities[index] : 0.15;
     }
 }
-
