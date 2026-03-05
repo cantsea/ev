@@ -26,7 +26,7 @@
                                Disabled="@(_chapterIndex >= chapters.Count)" />
                 <MudDivider Vertical="true" FlexItem="true" Class="mx-2" />
                 <MudIcon Icon="@Icons.Material.Filled.Speed" Size="Size.Small" Color="Color.Primary" />
-                <MudSlider T="int" Min="100" Max="10000" Step="500" @bind-Value="_playDelayMs"
+                <MudSlider T="int" Min="500" Max="5000" Step="500" @bind-Value="_playDelayMs"
                            Color="Color.Primary" Style="width:120px; margin:0 4px;" />
                 <MudText Typo="Typo.caption" Color="Color.Primary" Style="white-space:nowrap;">@((_playDelayMs / 1000.0).ToString("F1"))s</MudText>
             </MudStack>
@@ -45,7 +45,7 @@
         }
         else
         {
-            <MudText Typo="Typo.body2" Color="Color.Primary" Style="text-align:center;">No chapters loaded yet.</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;">No chapters loaded yet.</MudText>
         }
     </MudPaper>
 
@@ -67,7 +67,7 @@
                 }
                 else
                 {
-                    <MudText Typo="Typo.body2" Color="Color.Primary" Style="text-align:center;" Class="mb-4">No Chapters Yet</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;" Class="mb-4">No Chapters Yet</MudText>
                 }
 
                 <MudDivider Class="mb-4" />
@@ -176,6 +176,7 @@
                             {
                                 var entry = trail[i];
                                 if (entry.IsInvisible) continue;
+                                if (_data.Locations.Any(p => Math.Abs(p.X - entry.X) < 0.01 && Math.Abs(p.Y - entry.Y) < 0.01)) continue;
                                 var opacity = GetOpacity(i, trail.Count);
                                 <MudIconButton Icon="@Icons.Material.Filled.Place"
                                                Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color}; opacity:{opacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}; pointer-events:none;")" />
@@ -266,7 +267,7 @@
                                         lastChapterShown = entryChapter;
                                         <MudTimelineItem Color="Color.Default" Size="Size.Small" Style="opacity:0.5">
                                             <ItemContent>
-                                                <MudText Typo="Typo.caption" Color="Color.Primary" Style="text-align:center;">
+                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-align:center;">
                                                     ── @entryChapter.Name ──
                                                 </MudText>
                                             </ItemContent>
@@ -280,7 +281,7 @@
                                             <MudText Typo="Typo.caption" Style="text-align:center;">p.@entry.Page</MudText>
                                             @if (!string.IsNullOrEmpty(entry.Note))
                                             {
-                                                <MudText Typo="Typo.caption" Color="Color.Primary" Style="text-align:center;">@entry.Note</MudText>
+                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-align:center;">@entry.Note</MudText>
                                             }
                                         </ItemContent>
                                     </MudTimelineItem>

@@ -120,13 +120,14 @@
                 }
             </MudSelect>
 
-            <MudSelect T="string" Label="Character" @bind-Value="_formCharacterId"
-                       Variant="Variant.Outlined" Class="mb-2">
-                @foreach (var c in _data.Characters)
-                {
-                    <MudSelectItem Value="@c.Id">@c.Name</MudSelectItem>
-                }
-            </MudSelect>
+            <MudAutocomplete T="string" Label="Character"
+                             @bind-Value="_formCharacterId"
+                             SearchFunc="SearchCharacters"
+                             ToStringFunc="@(id => _data.Characters.FirstOrDefault(c => c.Id == id)?.Name ?? "")"
+                             Variant="Variant.Outlined" Class="mb-2"
+                             ResetValueOnEmptyText="false"
+                             CoerceText="false" />
+
             <MudNumericField T="double" Label="Page Number" @bind-Value="_formPage"
                              Variant="Variant.Outlined" Class="mb-2" Min="0.1" />
             <MudTextField @bind-Value="_formLocation" Label="Location"
@@ -265,6 +266,54 @@
 </MudGrid>
 
 <MudPaper Elevation="2" Class="pa-4 mt-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
+        <MudText Typo="Typo.h6" Style="flex:1">Entries & Chapters (@FilteredEntryAndChapterRows.Count)</MudText>
+        <MudSwitch T="bool" @bind-Value="_hideChapterRows" Color="Color.Primary" Label="Hide Chapters" />
+    </MudStack>
+    <div style="overflow-x:auto;">
+        <MudTable Items="DisplayedEntryAndChapterRows" Dense="true" Hover="true" Striped="true" T="TableRow"
+                  SortLabel="Sort By">
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Character)">Character</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page)" InitialDirection="SortDirection.Ascending">Page</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Progress)">Progress</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Location / Chapter</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Note)">Note</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Invisible)">Invisible</MudTableSortLabel></MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    @if (context.Type == "Chapter")
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Secondary">Chapter</MudChip>
+                    }
+                    else
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Primary">Entry</MudChip>
+                    }
+                </MudTd>
+                <MudTd>@context.Character</MudTd>
+                <MudTd>@(context.Page > 0 ? context.Page.ToString() : "—")</MudTd>
+                <MudTd>@(context.Progress > 0 ? $"{context.Progress:P1}" : "—")</MudTd>
+                <MudTd>@context.Label</MudTd>
+                <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
+                <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
+                <MudTd>@context.Note</MudTd>
+                <MudTd>@(context.Invisible ? "✓" : "")</MudTd>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Size="Size.Small" Color="Color.Error"
+                                   OnClick="() => DeleteRow(context)" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
+</MudPaper>
+<MudPaper Elevation="2" Class="pa-4 mt-4">
     <MudText Typo="Typo.h6" Class="mb-2">Characters & Presets</MudText>
     <div style="overflow-x:auto;">
         <MudTable Items="CharacterAndPresetRows" Dense="true" Hover="true" Striped="true" T="TableRow"
@@ -313,53 +362,6 @@
         </MudTable>
     </div>
 </MudPaper>
-
-<MudPaper Elevation="2" Class="pa-4 mt-4">
-    <MudText Typo="Typo.h6" Class="mb-2">Entries & Chapters (@FilteredEntryAndChapterRows.Count)</MudText>
-    <div style="overflow-x:auto;">
-        <MudTable Items="FilteredEntryAndChapterRows" Dense="true" Hover="true" Striped="true" T="TableRow"
-                  SortLabel="Sort By">
-            <HeaderContent>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Character)">Character</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page)" InitialDirection="SortDirection.Ascending">Page</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Progress)">Progress</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Location / Chapter</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Note)">Note</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Invisible)">Invisible</MudTableSortLabel></MudTh>
-                <MudTh></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd>
-                    @if (context.Type == "Chapter")
-                    {
-                        <MudChip T="string" Size="Size.Small" Color="Color.Secondary">Chapter</MudChip>
-                    }
-                    else
-                    {
-                        <MudChip T="string" Size="Size.Small" Color="Color.Primary">Entry</MudChip>
-                    }
-                </MudTd>
-                <MudTd>@context.Character</MudTd>
-                <MudTd>@(context.Page > 0 ? context.Page.ToString() : "—")</MudTd>
-                <MudTd>@(context.Progress > 0 ? $"{context.Progress:P1}" : "—")</MudTd>
-                <MudTd>@context.Label</MudTd>
-                <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
-                <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
-                <MudTd>@context.Note</MudTd>
-                <MudTd>@(context.Invisible ? "✓" : "")</MudTd>
-                <MudTd>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                   Size="Size.Small" Color="Color.Error"
-                                   OnClick="() => DeleteRow(context)" />
-                </MudTd>
-            </RowTemplate>
-        </MudTable>
-    </div>
-</MudPaper>
-
 <MudPaper Elevation="2" Class="pa-4 mt-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
         <MudText Typo="Typo.h6" Style="flex:1">JSON Output</MudText>
@@ -385,6 +387,7 @@
     private MapData _data = new();
     private string _json = "";
     private int _chapterIndex = 1;
+    private bool _hideChapterRows = true;
 
     private string _newCharName = "";
     private string _newCharColor = "#3b82f6";
@@ -404,6 +407,15 @@
     private bool _formIsInvisible = false;
     private double? _pendingX;
     private double? _pendingY;
+
+    private Task<IEnumerable<string>> SearchCharacters(string search, CancellationToken ct)
+    {
+        var results = _data.Characters
+            .OrderBy(c => c.Name)
+            .Where(c => string.IsNullOrWhiteSpace(search) || c.Name.Contains(search, StringComparison.OrdinalIgnoreCase))
+            .Select(c => c.Id);
+        return Task.FromResult(results);
+    }
 
     private bool IsEnd => _chapterIndex > _data.Chapters.Count;
 
@@ -449,13 +461,18 @@
             .Where(ch =>
             {
                 var ordered = _data.Chapters.OrderBy(c => c.Page).ToList();
-                return IsEnd || ordered.IndexOf(ch) < _chapterIndex;
+                return ordered.IndexOf(ch) < _chapterIndex;
             })
             .Select(ch => new TableRow(
                 Type: "Chapter", Character: "", Page: ch.Page,
                 Progress: ch.GetProgress(_data.TotalPages), Label: ch.Name,
                 X: null, Y: null, Note: "", Invisible: false, Source: ch)))
         .ToList();
+
+    private List<TableRow> DisplayedEntryAndChapterRows =>
+        _hideChapterRows
+            ? FilteredEntryAndChapterRows.Where(r => r.Type != "Chapter").ToList()
+            : FilteredEntryAndChapterRows;
 
     private async Task OnBookChanged(string file)
     {

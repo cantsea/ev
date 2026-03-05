@@ -1,6 +1,62 @@
 ﻿{
-  "TotalPages": 497,
-  "Characters": [],
+  "TotalPages": 498,
+  "Characters": [
+    {
+      "Id": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Name": "Eragon",
+      "Color": "#80b7ff"
+    },
+    {
+      "Id": "e820ba70-8743-4800-b112-66ee97d5f68c",
+      "Name": "Sloan",
+      "Color": "#000000"
+    },
+    {
+      "Id": "0cc03bad-9610-4bc0-b31e-ee91a842088f",
+      "Name": "Horst",
+      "Color": "#000000"
+    },
+    {
+      "Id": "e523c219-392c-4069-bbed-892ac7b43c37",
+      "Name": "Katrina",
+      "Color": "#feac39"
+    },
+    {
+      "Id": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
+      "Name": "Garrow",
+      "Color": "#77613c"
+    },
+    {
+      "Id": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Name": "Roran",
+      "Color": "#ffa200"
+    },
+    {
+      "Id": "8d5c05f8-2447-4757-8450-1dcc0c03e9d9",
+      "Name": "Morn",
+      "Color": "#000000"
+    },
+    {
+      "Id": "050fa48c-d442-4456-b19b-3342374028af",
+      "Name": "Brom",
+      "Color": "#5d3804"
+    },
+    {
+      "Id": "6cecbe50-39dc-4ff2-b1e5-8535f7e36bb9",
+      "Name": "Dragon",
+      "Color": "#0062ff"
+    },
+    {
+      "Id": "03a731f8-5c4d-4291-bca7-cacbd4f19133",
+      "Name": "Saphira",
+      "Color": "#3b82f6"
+    },
+    {
+      "Id": "ea40d60f-b9b2-4def-86ec-a147449763a7",
+      "Name": "Baldor",
+      "Color": "#000000"
+    }
+  ],
   "Chapters": [
     {
       "Name": "Prologue: Shade of Fear",
@@ -247,6 +303,316 @@
       "Page": 498
     }
   ],
-  "Entries": [],
-  "Locations": []
+  "Entries": [
+    {
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 20.5,
+      "Progress": 0.0412,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 22.6,
+      "Progress": 0.0454,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 35,
+      "Progress": 0.0703,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 47,
+      "Progress": 0.0944,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 57.8,
+      "Progress": 0.1161,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 65,
+      "Progress": 0.1305,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03a731f8-5c4d-4291-bca7-cacbd4f19133",
+      "Page": 59,
+      "Progress": 0.1185,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03a731f8-5c4d-4291-bca7-cacbd4f19133",
+      "Page": 76,
+      "Progress": 0.1526,
+      "Location": "Spine - Stone Clearing",
+      "X": 24.55,
+      "Y": 9.8,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "050fa48c-d442-4456-b19b-3342374028af",
+      "Page": 31.3,
+      "Progress": 0.0629,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "0cc03bad-9610-4bc0-b31e-ee91a842088f",
+      "Page": 13,
+      "Progress": 0.0261,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "0cc03bad-9610-4bc0-b31e-ee91a842088f",
+      "Page": 65,
+      "Progress": 0.1305,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 7,
+      "Progress": 0.0141,
+      "Location": "Spine - Stone Clearing",
+      "X": 24.55,
+      "Y": 9.8,
+      "Note": "This is a rough estimate.",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 10,
+      "Progress": 0.0201,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 16.5,
+      "Progress": 0.0331,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 22.6,
+      "Progress": 0.0454,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 35,
+      "Progress": 0.0703,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 47,
+      "Progress": 0.0944,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 57.8,
+      "Progress": 0.1161,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 65,
+      "Progress": 0.1305,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 70.45,
+      "Progress": 0.1415,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 76,
+      "Progress": 0.1526,
+      "Location": "Spine - Stone Clearing",
+      "X": 24.55,
+      "Y": 9.8,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cecbe50-39dc-4ff2-b1e5-8535f7e36bb9",
+      "Page": 37,
+      "Progress": 0.0743,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "8d5c05f8-2447-4757-8450-1dcc0c03e9d9",
+      "Page": 27.5,
+      "Progress": 0.0552,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
+      "Page": 17,
+      "Progress": 0.0341,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
+      "Page": 22.6,
+      "Progress": 0.0454,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
+      "Page": 35,
+      "Progress": 0.0703,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "e523c219-392c-4069-bbed-892ac7b43c37",
+      "Page": 13,
+      "Progress": 0.0261,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "e820ba70-8743-4800-b112-66ee97d5f68c",
+      "Page": 11,
+      "Progress": 0.0221,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "ea40d60f-b9b2-4def-86ec-a147449763a7",
+      "Page": 65,
+      "Progress": 0.1305,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
+      "IsInvisible": false
+    }
+  ],
+  "Locations": [
+    {
+      "Id": "43077ab7-fa43-4b9e-a78a-75f4069334bb",
+      "Name": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91
+    },
+    {
+      "Id": "4656ae42-37e0-4a6a-af5b-356ac573168a",
+      "Name": "Spine - Stone Clearing",
+      "X": 24.55,
+      "Y": 9.8
+    },
+    {
+      "Id": "72066735-eee6-4efd-b6b6-e63837ec1444",
+      "Name": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64
+    }
+  ]
 }
