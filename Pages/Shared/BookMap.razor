@@ -108,8 +108,11 @@
         <MudItem xs="12" md="9">
             <MudPaper Elevation="2" Class="pa-2">
                 <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2 px-2">
-                    <MudText Typo="Typo.caption" Color="Color.Primary">Scroll to zoom · Drag to pan · Click a marker to select</MudText>
-                    <MudSpacer />
+                    <MudText Typo="Typo.caption" Color="Color.Primary">
+                        Scroll to zoom | Drag to pan | Click a marker to select | 
+                        <MudLink Href="https://www.paolini.net/wp-content/uploads/2016/06/MapAlagaesia.jpg"
+                                 Target="_blank" Typo="Typo.caption">Map Source</MudLink>
+                    </MudText>                    <MudSpacer />
                     <MudIconButton Icon="@Icons.Material.Filled.ZoomIn" Size="Size.Small" OnClick="ZoomIn" />
                     <MudIconButton Icon="@Icons.Material.Filled.ZoomOut" Size="Size.Small" OnClick="ZoomOut" />
                     <MudIconButton Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" OnClick="ResetZoom" />
