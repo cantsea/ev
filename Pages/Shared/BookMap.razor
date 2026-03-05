@@ -8,6 +8,28 @@
         @if (_data.Chapters.Any())
         {
             var chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
+            <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Class="mb-2">
+                <MudIconButton Icon="@Icons.Material.Filled.SkipPrevious" Size="Size.Small" Color="Color.Primary"
+                               OnClick="() => _chapterIndex = 1"
+                               Disabled="@(_chapterIndex <= 1)" />
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" Color="Color.Primary"
+                               OnClick="() => _chapterIndex = Math.Max(1, _chapterIndex - 1)"
+                               Disabled="@(_chapterIndex <= 1)" />
+                <MudIconButton Icon="@(_playing? Icons.Material.Filled.Pause : Icons.Material.Filled.PlayArrow)"
+                               Size="Size.Small" Color="Color.Primary"
+                               OnClick="TogglePlay" />
+                <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" Color="Color.Primary"
+                               OnClick="() => _chapterIndex = Math.Min(chapters.Count, _chapterIndex + 1)"
+                               Disabled="@(_chapterIndex >= chapters.Count)" />
+                <MudIconButton Icon="@Icons.Material.Filled.SkipNext" Size="Size.Small" Color="Color.Primary"
+                               OnClick="() => _chapterIndex = chapters.Count"
+                               Disabled="@(_chapterIndex >= chapters.Count)" />
+                <MudDivider Vertical="true" FlexItem="true" Class="mx-2" />
+                <MudIcon Icon="@Icons.Material.Filled.Speed" Size="Size.Small" Color="Color.Primary" />
+                <MudSlider T="int" Min="100" Max="10000" Step="500" @bind-Value="_playDelayMs"
+                           Color="Color.Primary" Style="width:120px; margin:0 4px;" />
+                <MudText Typo="Typo.caption" Color="Color.Primary" Style="white-space:nowrap;">@((_playDelayMs / 1000.0).ToString("F1"))s</MudText>
+            </MudStack>
             <div class="d-none d-md-block">
                 <MudSlider T="int" Min="1" Max="@(chapters.Count)" Step="1"
                            @bind-Value="_chapterIndex"
@@ -23,7 +45,7 @@
         }
         else
         {
-            <MudText Typo="Typo.body2" Color="Color.Primary" Style="text-align:center;">No chapters loaded yet.</MudText>
+            <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;">No chapters loaded yet.</MudText>
         }
     </MudPaper>
 
@@ -45,7 +67,7 @@
                 }
                 else
                 {
-                    <MudText Typo="Typo.body2" Color="Color.Primary" Style="text-align:center;" Class="mb-4">No chapters loaded yet.</MudText>
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;" Class="mb-4">No Chapters Yet</MudText>
                 }
 
                 <MudDivider Class="mb-4" />
@@ -316,6 +338,38 @@
                     return new List<InfoRow> { new InfoRow(c.Name, c.Color, ActiveEntry.Location) };
             }
             return new();
+        }
+    }
+
+    private bool _playing = false;
+    private int _playDelayMs = 1500;
+    private System.Threading.CancellationTokenSource? _playCts;
+
+    private async Task TogglePlay()
+    {
+        _playing = !_playing;
+        if (_playing)
+        {
+            _playCts = new System.Threading.CancellationTokenSource();
+            var token = _playCts.Token;
+            var maxIndex = _data.Chapters.Count;
+            if (_chapterIndex >= maxIndex) _chapterIndex = 1;
+            _ = Task.Run(async () =>
+            {
+                while (!token.IsCancellationRequested && _chapterIndex < maxIndex)
+                {
+                    await Task.Delay(_playDelayMs, token);
+                    if (token.IsCancellationRequested) break;
+                    _chapterIndex++;
+                    await InvokeAsync(StateHasChanged);
+                }
+                _playing = false;
+                await InvokeAsync(StateHasChanged);
+            }, token);
+        }
+        else
+        {
+            _playCts?.Cancel();
         }
     }
 
