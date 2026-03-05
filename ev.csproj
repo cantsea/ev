@@ -17,7 +17,16 @@
   </ItemGroup>
 
   <ItemGroup>
-    <Content Update="wwwroot\data\mapData.json">
+    <Content Update="wwwroot\data\eldestMapData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\data\inheritanceMapData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\data\brisingrMapData.json">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Update="wwwroot\data\eragonMapData.json">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
   </ItemGroup>

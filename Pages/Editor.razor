@@ -7,6 +7,16 @@
 <MudText Typo="Typo.h5" Class="mb-4">Editor</MudText>
 
 <MudPaper Elevation="2" Class="pa-4 mb-4">
+    <MudSelect T="string" Label="Editing Book" Value="_dataFile" ValueChanged="OnBookChanged"
+               Variant="Variant.Outlined" Style="max-width:300px;">
+        @foreach (var book in Books)
+        {
+            <MudSelectItem Value="@book.File">@book.Title</MudSelectItem>
+        }
+    </MudSelect>
+</MudPaper>
+
+<MudPaper Elevation="2" Class="pa-4 mb-4">
     @if (_data.Chapters.Any())
     {
         var chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
@@ -17,7 +27,7 @@
     }
     else
     {
-        <MudText Typo="Typo.body2" Color="Color.Secondary">No chapters loaded yet.</MudText>
+        <MudText Typo="Typo.body2" Color="Color.Primary">No chapters loaded yet.</MudText>
     }
 </MudPaper>
 
@@ -168,7 +178,7 @@
     <MudItem xs="12" md="6">
         <MudPaper Elevation="2" Class="pa-2">
             <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2 px-2">
-                <MudText Typo="Typo.caption" Color="Color.Secondary">
+                <MudText Typo="Typo.caption" Color="Color.Primary">
                     @(_placingPreset ? "🟡 Preset mode — click to place preset pin" : "Scroll to zoom · Drag to pan · Click to place pin")
                 </MudText>
                 <MudSpacer />
@@ -359,6 +369,18 @@
 </MudPaper>
 
 @code {
+    // *** Add new books here ***
+    private record BookEntry(string Title, string File);
+    private static readonly List<BookEntry> Books = new()
+    {
+        new("Eragon",       "data/eragonMapData.json"),
+        new("Eldest",       "data/eldestMapData.json"),
+        new("Brisingr",     "data/brisingrMapData.json"),
+        new("Inheritance",  "data/inheritanceMapData.json"),
+    };
+
+    private string _dataFile = "data/eragonMapData.json";
+
     private MapEntry? _selectedEntry;
     private MapData _data = new();
     private string _json = "";
@@ -424,12 +446,41 @@
             Page: e.Page, Progress: e.Progress, Label: e.Location,
             X: e.X, Y: e.Y, Note: e.Note, Invisible: e.IsInvisible, Source: e))
         .Concat(_data.Chapters
-            .Where(ch => IsEnd || ch.Page < (SelectedChapter?.Page ?? 0))
+            .Where(ch =>
+            {
+                var ordered = _data.Chapters.OrderBy(c => c.Page).ToList();
+                return IsEnd || ordered.IndexOf(ch) < _chapterIndex;
+            })
             .Select(ch => new TableRow(
                 Type: "Chapter", Character: "", Page: ch.Page,
                 Progress: ch.GetProgress(_data.TotalPages), Label: ch.Name,
                 X: null, Y: null, Note: "", Invisible: false, Source: ch)))
         .ToList();
+
+    private async Task OnBookChanged(string file)
+    {
+        _dataFile = file;
+        _chapterIndex = 1;
+        _selectedEntry = null;
+        _pendingX = null;
+        _pendingY = null;
+        _pendingPresetX = null;
+        _pendingPresetY = null;
+        _placingPreset = false;
+        _selectedPresetId = "";
+        await LoadData();
+    }
+
+    private async Task LoadData()
+    {
+        try
+        {
+            _data = await Http.GetFromJsonAsync<MapData>($"{_dataFile}?v={DateTime.UtcNow.Ticks}") ?? new();
+        }
+        catch { _data = new(); }
+        RefreshJson();
+        StateHasChanged();
+    }
 
     private void DeleteRow(TableRow row)
     {
@@ -465,12 +516,7 @@
 
     protected override async Task OnInitializedAsync()
     {
-        try
-        {
-            _data = await Http.GetFromJsonAsync<MapData>($"data/mapData.json?v={DateTime.UtcNow.Ticks}") ?? new();
-        }
-        catch { _data = new(); }
-        RefreshJson();
+        await LoadData();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
