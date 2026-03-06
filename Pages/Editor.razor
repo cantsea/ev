@@ -212,8 +212,8 @@
                      @onmousemove="HandleMouseMove"
                      @onmouseleave="() => { _cursorX = null; _cursorY = null; }">
 
-                    <MudImage Src="Images/Maps/inheritance_original_map.jpg"
-                              Fluid="true" ObjectFit="ObjectFit.Contain" Alt="Map" />
+                    <img src="Images/Maps/inheritance_original_map.jpg"
+                         style="width:100%; height:auto; display:block;" alt="Map" />
 
                     <svg style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
                         @foreach (var character in _data.Characters)
@@ -274,7 +274,7 @@
                         var isMoving = _movingPreset == preset;
                         var tooltipText = isMoving ? $"✋ Moving: {preset.Name}" : $"📍 {preset.Name} (click to move)";
                         <MudTooltip Text="@tooltipText">
-                            <MudIconButton Icon="@(isMoving? Icons.Material.Filled.Star : Icons.Material.Outlined.StarOutline)"
+                            <MudIconButton Icon="@(isMoving? Icons.Material.Filled.Circle : Icons.Material.Outlined.Circle)"
                                            Style="@($"position:absolute; left:{preset.X:F2}%; top:{preset.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:{(isMoving ? "#f97316" : "#f59e0b")}; opacity:{(isMoving ? "1.0" : "0.8")}; filter:{(isMoving ? "drop-shadow(0 0 4px white)" : "none")};")"
                                            OnClick="@((e) => SelectPresetForMove(capturedPreset))" />
                         </MudTooltip>

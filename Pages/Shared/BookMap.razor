@@ -146,8 +146,8 @@
                 <div id="@_mapWrapperId" style="overflow: hidden; width: 100%; touch-action: none;">
                     <div id="@_mapInnerId" style="position:relative; display:inline-block; width:100%;">
 
-                        <MudImage Src="Images/Maps/inheritance_original_map.jpg"
-                                  Fluid="true" ObjectFit="ObjectFit.Contain" Alt="Map" />
+                        <img src="Images/Maps/inheritance_original_map.jpg"
+                             style="width:100%; height:auto; display:block;" alt="Map" />
 
                         <svg style="position:absolute; inset:0; width:100%; height:100%; pointer-events:none;">
                             @foreach (var character in _data.Characters)
@@ -205,7 +205,7 @@
                             var capturedPreset = preset;
                             var charsHere = GetCharactersAtPreset(preset);
                             var isSelected = _selectedPreset == preset;
-                            <MudIconButton Icon="@(charsHere.Any() ? Icons.Material.Filled.Star : Icons.Material.Outlined.StarOutline)"
+                            <MudIconButton Icon="@(charsHere.Any() ? Icons.Material.Filled.Circle : Icons.Material.Outlined.Circle)" "
                                            Style="@($"position:absolute; left:{preset.X:F2}%; top:{preset.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:#f59e0b; opacity:{(isSelected ? "1.0" : "0.6")}; filter:{(isSelected ? "drop-shadow(0 0 4px white)" : "none")};")"
                                            @onmouseenter="() => { if (_selectedEntry == null && _selectedPreset == null) { _hoveredPreset = capturedPreset; _hoveredEntry = null; } }"
                                            @onmouseleave="() => { if (_selectedEntry == null && _selectedPreset == null) _hoveredPreset = null; }"
