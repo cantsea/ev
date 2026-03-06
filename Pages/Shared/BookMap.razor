@@ -122,7 +122,7 @@
                             var capturedPreset = preset;
                             var charsHere = GetCharactersAtPreset(preset);
                             var isSelected = _selectedPreset == preset;
-                            <MudIconButton Icon="@(charsHere.Any() ? Icons.Material.Filled.Circle : Icons.Material.Outlined.Circle)" "
+                            <MudIconButton Icon="@(charsHere.Any() ? Icons.Material.Filled.Circle : Icons.Material.Outlined.Circle)"
                                            Style="@($"position:absolute; left:{preset.X:F2}%; top:{preset.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:#f59e0b; opacity:{(isSelected ? "1.0" : "0.6")}; filter:{(isSelected ? "drop-shadow(0 0 4px white)" : "none")};")"
                                            @onmouseenter="() => { if (_selectedEntry == null && _selectedPreset == null) { _hoveredPreset = capturedPreset; _hoveredEntry = null; } }"
                                            @onmouseleave="() => { if (_selectedEntry == null && _selectedPreset == null) _hoveredPreset = null; }"
@@ -135,8 +135,6 @@
         </MudItem>
         <MudItem xs="12" md="3">
             <MudPaper Elevation="2" Class="pa-4" Style="height:100%;">
-
-                @* CURRENT CHAPTER *@
 
                 <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">Current Chapter</MudText>
                 @if (_data.Chapters.Any())
@@ -156,8 +154,6 @@
 
                 <MudDivider Class="mb-4" />
 
-                @* CHARACTERS *@
-
                 <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">Characters</MudText>
                 <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
                     @foreach (var character in _data.Characters)
@@ -173,8 +169,6 @@
                 </div>
 
                 <MudDivider Class="my-4" />
-
-                @* SELECTION *@
 
                 <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">
                     @if (ActivePreset != null)
@@ -442,10 +436,10 @@
         await JS.InvokeVoidAsync("mapHelper.resetZoom", _mapWrapperId);
 
     private async Task ZoomIn() =>
-        await JS.InvokeVoidAsync("eval", $"mapHelper.panzoomInstances['{_mapWrapperId}']?.instance.zoomIn()");
+        await JS.InvokeVoidAsync("mapHelper.zoomIn", _mapWrapperId);
 
     private async Task ZoomOut() =>
-        await JS.InvokeVoidAsync("eval", $"mapHelper.panzoomInstances['{_mapWrapperId}']?.instance.zoomOut()");
+        await JS.InvokeVoidAsync("mapHelper.zoomOut", _mapWrapperId);
 
     private CharacterModel? GetCharacter(string id) =>
         _data.Characters.FirstOrDefault(c => c.Id == id);
