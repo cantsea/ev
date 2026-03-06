@@ -3,7 +3,7 @@
 @using ev.Models
 
 <div style="@($"--mud-palette-primary:{PrimaryColor}; --mud-palette-primary-text:white;")">
-
+    @* TIMELINE *@
     <MudPaper Elevation="2" Class="pa-4 mb-2">
         @if (_data.Chapters.Any())
         {
@@ -48,91 +48,8 @@
             <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;">No chapters loaded yet.</MudText>
         }
     </MudPaper>
-
+    @* SIDEBAR AND MAP *@
     <MudGrid Class="mb-4">
-
-        <MudItem xs="12" md="3">
-            <MudPaper Elevation="2" Class="pa-4" Style="height:100%;">
-
-                <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">Current Chapter</MudText>
-                @if (_data.Chapters.Any())
-                {
-                    <MudSelect T="int" @bind-Value="_chapterIndex" Variant="Variant.Outlined" Class="mb-4">
-                        @foreach (var chapter in _data.Chapters.OrderBy(c => c.Page))
-                        {
-                            var index = _data.Chapters.OrderBy(c => c.Page).ToList().IndexOf(chapter) + 1;
-                            <MudSelectItem T="int" Value="@index">@chapter.Name</MudSelectItem>
-                        }
-                    </MudSelect>
-                }
-                else
-                {
-                    <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;" Class="mb-4">No Chapters Yet</MudText>
-                }
-
-                <MudDivider Class="mb-4" />
-
-                <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">Characters</MudText>
-                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
-                    @foreach (var character in _data.Characters)
-                    {
-                        var captured = character;
-                        <div style="display:flex; align-items:center; justify-content:left; gap:6px;">
-                            <input type="color" value="@character.Color"
-                                   style="width:22px; height:22px; border:none; cursor:pointer; border-radius:4px; flex-shrink:0;"
-                                   @onchange="e => UpdateColor(captured, e.Value?.ToString() ?? captured.Color)" />
-                            <MudText Typo="Typo.body2" Style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">@character.Name</MudText>
-                        </div>
-                    }
-                </div>
-
-                <MudDivider Class="my-4" />
-
-                <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">
-                    @if (ActivePreset != null)
-                    {
-                        <span>📍 @ActivePreset.Name</span>
-                    }
-                    else if (ActiveEntry != null)
-                    {
-                        <span>@(GetCharacter(ActiveEntry.CharacterId)?.Name)</span>
-                    }
-                    else
-                    {
-                        <span>Selection</span>
-                    }
-                </MudText>
-
-                <div style="overflow-x:auto;">
-                    <MudTable Items="InfoRows" Dense="true" Hover="true" T="InfoRow" Elevation="0">
-                        <HeaderContent>
-                            <MudTh Style="text-align:center;">Character</MudTh>
-                            <MudTh Style="text-align:center;">Location</MudTh>
-                        </HeaderContent>
-                        <RowTemplate>
-                            <MudTd Style="text-align:center;">
-                                <div style="display:flex; justify-content:center; align-items:center; gap:4px;">
-                                    <div style="width:10px; height:10px; border-radius:50%; background:@context.Color; flex-shrink:0;"></div>
-                                    <MudText Typo="Typo.body2">@context.CharacterName</MudText>
-                                </div>
-                            </MudTd>
-                            <MudTd Style="text-align:center;">@context.Location</MudTd>
-                        </RowTemplate>
-                    </MudTable>
-                </div>
-
-                @if (ActiveEntry != null || ActivePreset != null)
-                {
-                    <div style="text-align:center;">
-                        <MudButton Variant="Variant.Text" Size="Size.Small" Class="mt-2" OnClick="Deselect">
-                            Deselect
-                        </MudButton>
-                    </div>
-                }
-
-            </MudPaper>
-        </MudItem>
-
         <MudItem xs="12" md="9">
             <MudPaper Elevation="2" Class="pa-2">
                 <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2 px-2">
@@ -216,7 +133,93 @@
                 </div>
             </MudPaper>
         </MudItem>
+        <MudItem xs="12" md="3">
+            <MudPaper Elevation="2" Class="pa-4" Style="height:100%;">
 
+                @* CURRENT CHAPTER *@
+
+                <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">Current Chapter</MudText>
+                @if (_data.Chapters.Any())
+                {
+                    <MudSelect T="int" @bind-Value="_chapterIndex" Variant="Variant.Outlined" Class="mb-4">
+                        @foreach (var chapter in _data.Chapters.OrderBy(c => c.Page))
+                        {
+                            var index = _data.Chapters.OrderBy(c => c.Page).ToList().IndexOf(chapter) + 1;
+                            <MudSelectItem T="int" Value="@index">@chapter.Name</MudSelectItem>
+                        }
+                    </MudSelect>
+                }
+                else
+                {
+                    <MudText Typo="Typo.body2" Color="Color.Secondary" Style="text-align:center;" Class="mb-4">No Chapters Yet</MudText>
+                }
+
+                <MudDivider Class="mb-4" />
+
+                @* CHARACTERS *@
+
+                <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">Characters</MudText>
+                <div style="display:grid; grid-template-columns:1fr 1fr; gap:8px; margin-bottom:8px;">
+                    @foreach (var character in _data.Characters)
+                    {
+                        var captured = character;
+                        <div style="display:flex; align-items:center; justify-content:left; gap:6px;">
+                            <input type="color" value="@character.Color"
+                                   style="width:22px; height:22px; border:none; cursor:pointer; border-radius:4px; flex-shrink:0;"
+                                   @onchange="e => UpdateColor(captured, e.Value?.ToString() ?? captured.Color)" />
+                            <MudText Typo="Typo.body2" Style="white-space:nowrap; overflow:hidden; text-overflow:ellipsis;">@character.Name</MudText>
+                        </div>
+                    }
+                </div>
+
+                <MudDivider Class="my-4" />
+
+                @* SELECTION *@
+
+                <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">
+                    @if (ActivePreset != null)
+                    {
+                        <span>📍 @ActivePreset.Name</span>
+                    }
+                    else if (ActiveEntry != null)
+                    {
+                        <span>@(GetCharacter(ActiveEntry.CharacterId)?.Name)</span>
+                    }
+                    else
+                    {
+                        <span>Selection</span>
+                    }
+                </MudText>
+
+                <div style="overflow-x:auto;">
+                    <MudTable Items="InfoRows" Dense="true" Hover="true" T="InfoRow" Elevation="0">
+                        <HeaderContent>
+                            <MudTh Style="text-align:center;">Character</MudTh>
+                            <MudTh Style="text-align:center;">Location</MudTh>
+                        </HeaderContent>
+                        <RowTemplate>
+                            <MudTd Style="text-align:center;">
+                                <div style="display:flex; justify-content:center; align-items:center; gap:4px;">
+                                    <div style="width:10px; height:10px; border-radius:50%; background:@context.Color; flex-shrink:0;"></div>
+                                    <MudText Typo="Typo.body2">@context.CharacterName</MudText>
+                                </div>
+                            </MudTd>
+                            <MudTd Style="text-align:center;">@context.Location</MudTd>
+                        </RowTemplate>
+                    </MudTable>
+                </div>
+
+                @if (ActiveEntry != null || ActivePreset != null)
+                {
+                    <div style="text-align:center;">
+                        <MudButton Variant="Variant.Text" Size="Size.Small" Class="mt-2" OnClick="Deselect">
+                            Deselect
+                        </MudButton>
+                    </div>
+                }
+
+            </MudPaper>
+        </MudItem>
     </MudGrid>
 
     <MudPaper Elevation="2" Class="pa-4">
@@ -439,10 +442,10 @@
         await JS.InvokeVoidAsync("mapHelper.resetZoom", _mapWrapperId);
 
     private async Task ZoomIn() =>
-        await JS.InvokeVoidAsync("eval", $"mapHelper.panzoomInstances['{_mapWrapperId}']?.zoomIn()");
+        await JS.InvokeVoidAsync("eval", $"mapHelper.panzoomInstances['{_mapWrapperId}']?.instance.zoomIn()");
 
     private async Task ZoomOut() =>
-        await JS.InvokeVoidAsync("eval", $"mapHelper.panzoomInstances['{_mapWrapperId}']?.zoomOut()");
+        await JS.InvokeVoidAsync("eval", $"mapHelper.panzoomInstances['{_mapWrapperId}']?.instance.zoomOut()");
 
     private CharacterModel? GetCharacter(string id) =>
         _data.Characters.FirstOrDefault(c => c.Id == id);

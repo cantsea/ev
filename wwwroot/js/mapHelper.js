@@ -4,7 +4,7 @@
         const el = document.getElementById(elementId);
         if (!el) return;
         if (window.mapHelper.panzoomInstances[wrapperId]) {
-            window.mapHelper.panzoomInstances[wrapperId].destroy();
+            window.mapHelper.panzoomInstances[wrapperId].instance.destroy();
         }
         const instance = Panzoom(el, {
             maxScale: 8,
@@ -13,18 +13,16 @@
             cursor: 'grab'
         });
         el.parentElement.addEventListener('wheel', instance.zoomWithWheel);
-
         el.addEventListener('panzoomzoom', (e) => {
             el.style.setProperty('--marker-scale', 1 / e.detail.scale);
         });
-
-        window.mapHelper.panzoomInstances[wrapperId] = instance;
+        window.mapHelper.panzoomInstances[wrapperId] = { instance, el };
     },
     resetZoom: function (wrapperId) {
-        const instance = window.mapHelper.panzoomInstances[wrapperId];
-        if (instance) {
-            instance.reset();
-            instance.getElements()[0]?.style.setProperty('--marker-scale', 1);
+        const entry = window.mapHelper.panzoomInstances[wrapperId];
+        if (entry) {
+            entry.instance.reset();
+            entry.el.style.setProperty('--marker-scale', 1);
         }
     },
     getClickPercentage: function (element, clientX, clientY) {

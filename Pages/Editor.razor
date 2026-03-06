@@ -590,10 +590,10 @@
         await JS.InvokeVoidAsync("mapHelper.resetZoom", "editor-map");
 
     private async Task ZoomIn() =>
-        await JS.InvokeVoidAsync("eval", "mapHelper.panzoomInstances['editor-map']?.zoomIn()");
+        await JS.InvokeVoidAsync("eval", "mapHelper.panzoomInstances['editor-map']?.instance.zoomIn()");
 
     private async Task ZoomOut() =>
-        await JS.InvokeVoidAsync("eval", "mapHelper.panzoomInstances['editor-map']?.zoomOut()");
+        await JS.InvokeVoidAsync("eval", "mapHelper.panzoomInstances['editor-map']?.instance.zoomOut()");
 
     private async Task HandleMouseMove(MouseEventArgs e)
     {
