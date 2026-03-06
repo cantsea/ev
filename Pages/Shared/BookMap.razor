@@ -55,6 +55,8 @@
                 <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2 px-2">
                     <MudText Typo="Typo.caption" Color="Color.Primary">Scroll to zoom · Drag to pan · Click a marker to select</MudText>
                     <MudSpacer />
+                    <MudCheckBox T="bool" @bind-Value="_showCharacterLabels" Size="Size.Small" Color="Color.Primary" Label="Names (Beta)" Class="mr-1" />
+                    <MudNumericField T="int" @bind-Value="_labelFontSize" Min="6" Max="32" Step="1" Variant="Variant.Outlined" Style="width:70px;" />
                     <MudIconButton Icon="@Icons.Material.Filled.ZoomIn" Size="Size.Small" OnClick="ZoomIn" />
                     <MudIconButton Icon="@Icons.Material.Filled.ZoomOut" Size="Size.Small" OnClick="ZoomOut" />
                     <MudIconButton Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" OnClick="ResetZoom" />
@@ -82,6 +84,31 @@
                                           stroke-width="2"
                                           stroke-dasharray="6 3"
                                           stroke-opacity="@lineOpacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)" />
+                                }
+                                @* Label with leader line — skip if no real movement *@
+                                var labelA = trail[0];
+                                var labelB = trail[1];
+                                var distX = labelA.X - labelB.X;
+                                var distY = labelA.Y - labelB.Y;
+                                var dist = Math.Sqrt(distX * distX + distY * distY);
+                                if (dist > 0.5)
+                                {
+                                    var midX = (labelA.X + labelB.X) / 2.0;
+                                    var midY = (labelA.Y + labelB.Y) / 2.0;
+                                    var labelOffset = GetLabelOffset(character.Id, midX, midY);
+                                    // Perpendicular direction to the trail segment
+                                    var segLen = Math.Sqrt(distX * distX + distY * distY);
+                                    var perpX = -distY / segLen;
+                                    var perpY = distX / segLen;
+                                    // Offset label perpendicularly, stacking multiples
+                                    var leaderDist = 3.5 + labelOffset * 2.5;
+                                    var labelX = midX + perpX * leaderDist;
+                                    var labelY = midY + perpY * leaderDist;
+                                    if (_showCharacterLabels)
+                                    {
+                                        @((MarkupString)$"<line x1=\"{midX:F2}%\" y1=\"{midY:F2}%\" x2=\"{labelX:F2}%\" y2=\"{labelY:F2}%\" stroke=\"{character.Color}\" stroke-width=\"1\" stroke-opacity=\"0.7\" />")
+                                        @((MarkupString)$"<text x=\"{labelX:F2}%\" y=\"{labelY:F2}%\" fill=\"{character.Color}\" font-size=\"{_labelFontSize}\" font-weight=\"bold\" text-anchor=\"middle\" dominant-baseline=\"middle\" style=\"paint-order:stroke; stroke:#000; stroke-width:3px; stroke-linejoin:round; transform-origin:{labelX:F2}% {labelY:F2}%; transform:scale(var(--marker-scale,1));\">{character.Name}</text>")
+                                    }
                                 }
                             }
                         </svg>
@@ -339,6 +366,8 @@
         }
     }
 
+    private bool _showCharacterLabels = true;
+    private int _labelFontSize = 13;
     private bool _playing = false;
     private int _playDelayMs = 1500;
     private System.Threading.CancellationTokenSource? _playCts;
@@ -458,6 +487,24 @@
             .OrderByDescending(e => e.Page)
             .Take(5)
             .ToList();
+    }
+
+    private int GetLabelOffset(string characterId, double midX, double midY)
+    {
+        // Find all characters whose most recent trail midpoint is near this one
+        var sharing = _data.Characters
+            .Where(c =>
+            {
+                var t = GetTrail(c.Id);
+                if (t.Count < 2) return false;
+                var cx = (t[0].X + t[1].X) / 2.0;
+                var cy = (t[0].Y + t[1].Y) / 2.0;
+                var d = Math.Sqrt(Math.Pow(cx - midX, 2) + Math.Pow(cy - midY, 2));
+                return d < 1.0;
+            })
+            .Select(c => c.Id)
+            .ToList();
+        return sharing.IndexOf(characterId);
     }
 
     private double GetOpacity(int index, int total)
