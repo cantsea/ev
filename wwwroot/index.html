@@ -37,5 +37,15 @@
     <script src="js/panzoom.min.js"></script>
     <script src="js/mapHelper.js"></script>
 </body>
+<style>
+    button[style*="translate(-50%,-100%)"] {
+        transform-origin: bottom center !important;
+        transform: translate(-50%, -100%) scale(var(--marker-scale, 1)) !important;
+    }
 
+    button[style*="translate(-50%,-50%)"] {
+        transform-origin: center center !important;
+        transform: translate(-50%, -50%) scale(var(--marker-scale, 1)) !important;
+    }
+</style>
 </html>
