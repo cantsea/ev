@@ -108,6 +108,24 @@
 
             <MudDivider Class="my-4" />
 
+            <MudText Typo="Typo.h6" Class="mb-2">Move Preset</MudText>
+            @if (_movingPreset == null)
+            {
+                <MudText Typo="Typo.body2" Color="Color.Secondary" Class="mb-2">Click a ⭐ on the map to select it for moving.</MudText>
+            }
+            else
+            {
+                <MudAlert Severity="Severity.Warning" Class="mb-2">
+                    Moving: <strong>@_movingPreset.Name</strong> — now click the map to place it.
+                </MudAlert>
+                <MudButton Variant="Variant.Outlined" Color="Color.Default"
+                           FullWidth="true" OnClick="() => _movingPreset = null">
+                    Cancel
+                </MudButton>
+            }
+
+            <MudDivider Class="my-4" />
+
             <MudText Typo="Typo.h6" Class="mb-2">Place Entry</MudText>
 
             <MudSelect T="string" Label="Load Preset" Value="_selectedPresetId"
@@ -189,8 +207,10 @@
             </MudStack>
 
             <div id="editor-map" style="overflow: hidden; width: 100%; touch-action: none;">
-                <div id="editor-map-inner" style="position: relative; display: inline-block; width: 100%; cursor: crosshair;"
-                     @onclick="HandleMapClick">
+                <div id="editor-map-inner" style="position: relative; display: inline-block; width: 100%; cursor: none;"
+                     @onclick="HandleMapClick"
+                     @onmousemove="HandleMouseMove"
+                     @onmouseleave="() => { _cursorX = null; _cursorY = null; }">
 
                     <MudImage Src="Images/Maps/inheritance_original_map.jpg"
                               Fluid="true" ObjectFit="ObjectFit.Contain" Alt="Map" />
@@ -209,6 +229,17 @@
                                       stroke="@character.Color" stroke-width="1"
                                       stroke-dasharray="4 3" stroke-opacity="0.4" />
                             }
+                        }
+                        @if (_cursorX.HasValue)
+                        {
+                            <line x1="@($"{_cursorX:F2}%")" y1="0%"
+                                  x2="@($"{_cursorX:F2}%")" y2="100%"
+                                  stroke="red" stroke-width="0.5" stroke-opacity="0.8" />
+                            <line x1="0%" y1="@($"{_cursorY:F2}%")"
+                                  x2="100%" y2="@($"{_cursorY:F2}%")"
+                                  stroke="red" stroke-width="0.5" stroke-opacity="0.8" />
+                            <circle cx="@($"{_cursorX:F2}%")" cy="@($"{_cursorY:F2}%")"
+                                    r="3" fill="none" stroke="red" stroke-width="1" stroke-opacity="0.9" />
                         }
                     </svg>
 
@@ -240,11 +271,12 @@
                     @foreach (var preset in _data.Locations)
                     {
                         var capturedPreset = preset;
-                        var tooltipText = $"📍 {preset.Name}";
+                        var isMoving = _movingPreset == preset;
+                        var tooltipText = isMoving ? $"✋ Moving: {preset.Name}" : $"📍 {preset.Name} (click to move)";
                         <MudTooltip Text="@tooltipText">
-                            <MudIconButton Icon="@Icons.Material.Outlined.StarOutline"
-                                           Style="@($"position:absolute; left:{preset.X:F2}%; top:{preset.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:#f59e0b; opacity:0.8;")"
-                                           OnClick="@((e) => { })" />
+                            <MudIconButton Icon="@(isMoving? Icons.Material.Filled.Star : Icons.Material.Outlined.StarOutline)"
+                                           Style="@($"position:absolute; left:{preset.X:F2}%; top:{preset.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:{(isMoving ? "#f97316" : "#f59e0b")}; opacity:{(isMoving ? "1.0" : "0.8")}; filter:{(isMoving ? "drop-shadow(0 0 4px white)" : "none")};")"
+                                           OnClick="@((e) => SelectPresetForMove(capturedPreset))" />
                         </MudTooltip>
                     }
 
@@ -265,54 +297,6 @@
     </MudItem>
 </MudGrid>
 
-<MudPaper Elevation="2" Class="pa-4 mt-4">
-    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
-        <MudText Typo="Typo.h6" Style="flex:1">Entries & Chapters (@FilteredEntryAndChapterRows.Count)</MudText>
-        <MudSwitch T="bool" @bind-Value="_hideChapterRows" Color="Color.Primary" Label="Hide Chapters" />
-    </MudStack>
-    <div style="overflow-x:auto;">
-        <MudTable Items="DisplayedEntryAndChapterRows" Dense="true" Hover="true" Striped="true" T="TableRow"
-                  SortLabel="Sort By">
-            <HeaderContent>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Character)">Character</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page)" InitialDirection="SortDirection.Ascending">Page</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Progress)">Progress</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Location / Chapter</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Note)">Note</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Invisible)">Invisible</MudTableSortLabel></MudTh>
-                <MudTh></MudTh>
-            </HeaderContent>
-            <RowTemplate>
-                <MudTd>
-                    @if (context.Type == "Chapter")
-                    {
-                        <MudChip T="string" Size="Size.Small" Color="Color.Secondary">Chapter</MudChip>
-                    }
-                    else
-                    {
-                        <MudChip T="string" Size="Size.Small" Color="Color.Primary">Entry</MudChip>
-                    }
-                </MudTd>
-                <MudTd>@context.Character</MudTd>
-                <MudTd>@(context.Page > 0 ? context.Page.ToString() : "—")</MudTd>
-                <MudTd>@(context.Progress > 0 ? $"{context.Progress:P1}" : "—")</MudTd>
-                <MudTd>@context.Label</MudTd>
-                <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
-                <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
-                <MudTd>@context.Note</MudTd>
-                <MudTd>@(context.Invisible ? "✓" : "")</MudTd>
-                <MudTd>
-                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
-                                   Size="Size.Small" Color="Color.Error"
-                                   OnClick="() => DeleteRow(context)" />
-                </MudTd>
-            </RowTemplate>
-        </MudTable>
-    </div>
-</MudPaper>
 <MudPaper Elevation="2" Class="pa-4 mt-4">
     <MudText Typo="Typo.h6" Class="mb-2">Characters & Presets</MudText>
     <div style="overflow-x:auto;">
@@ -362,6 +346,56 @@
         </MudTable>
     </div>
 </MudPaper>
+
+<MudPaper Elevation="2" Class="pa-4 mt-4">
+    <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
+        <MudText Typo="Typo.h6" Style="flex:1">Entries & Chapters (@FilteredEntryAndChapterRows.Count)</MudText>
+        <MudSwitch T="bool" @bind-Value="_hideChapterRows" Color="Color.Primary" Label="Hide Chapters" />
+    </MudStack>
+    <div style="overflow-x:auto;">
+        <MudTable Items="DisplayedEntryAndChapterRows" Dense="true" Hover="true" Striped="true" T="TableRow"
+                  SortLabel="Sort By">
+            <HeaderContent>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Character)">Character</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page)" InitialDirection="SortDirection.Ascending">Page</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Progress)">Progress</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Location / Chapter</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Note)">Note</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Invisible)">Invisible</MudTableSortLabel></MudTh>
+                <MudTh></MudTh>
+            </HeaderContent>
+            <RowTemplate>
+                <MudTd>
+                    @if (context.Type == "Chapter")
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Secondary">Chapter</MudChip>
+                    }
+                    else
+                    {
+                        <MudChip T="string" Size="Size.Small" Color="Color.Primary">Entry</MudChip>
+                    }
+                </MudTd>
+                <MudTd>@context.Character</MudTd>
+                <MudTd>@(context.Page > 0 ? context.Page.ToString() : "—")</MudTd>
+                <MudTd>@(context.Progress > 0 ? $"{context.Progress:P1}" : "—")</MudTd>
+                <MudTd>@context.Label</MudTd>
+                <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
+                <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
+                <MudTd>@context.Note</MudTd>
+                <MudTd>@(context.Invisible ? "✓" : "")</MudTd>
+                <MudTd>
+                    <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   Size="Size.Small" Color="Color.Error"
+                                   OnClick="() => DeleteRow(context)" />
+                </MudTd>
+            </RowTemplate>
+        </MudTable>
+    </div>
+</MudPaper>
+
 <MudPaper Elevation="2" Class="pa-4 mt-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
         <MudText Typo="Typo.h6" Style="flex:1">JSON Output</MudText>
@@ -398,6 +432,7 @@
     private double? _pendingPresetX;
     private double? _pendingPresetY;
     private bool _placingPreset = false;
+    private LocationPreset? _movingPreset = null;
     private string _selectedPresetId = "";
 
     private string _formCharacterId = "";
@@ -407,6 +442,8 @@
     private bool _formIsInvisible = false;
     private double? _pendingX;
     private double? _pendingY;
+    private double? _cursorX;
+    private double? _cursorY;
 
     private Task<IEnumerable<string>> SearchCharacters(string search, CancellationToken ct)
     {
@@ -484,6 +521,7 @@
         _pendingPresetX = null;
         _pendingPresetY = null;
         _placingPreset = false;
+        _movingPreset = null;
         _selectedPresetId = "";
         await LoadData();
     }
@@ -519,6 +557,12 @@
         StateHasChanged();
     }
 
+    private void SelectPresetForMove(LocationPreset preset)
+    {
+        _movingPreset = _movingPreset == preset ? null : preset;
+        _placingPreset = false;
+    }
+
     private void OnPresetSelected(string presetId)
     {
         _selectedPresetId = presetId;
@@ -551,6 +595,16 @@
     private async Task ZoomOut() =>
         await JS.InvokeVoidAsync("eval", "mapHelper.panzoomInstances['editor-map']?.zoomOut()");
 
+    private async Task HandleMouseMove(MouseEventArgs e)
+    {
+        var result = await JS.InvokeAsync<ClickResult>(
+            "mapHelper.getClickPercentage",
+            await JS.InvokeAsync<IJSObjectReference>("eval", "document.getElementById('editor-map-inner')"),
+            e.ClientX, e.ClientY);
+        _cursorX = result.X;
+        _cursorY = result.Y;
+    }
+
     private async Task HandleMapClick(MouseEventArgs e)
     {
         var result = await JS.InvokeAsync<ClickResult>(
@@ -558,7 +612,14 @@
             await JS.InvokeAsync<IJSObjectReference>("eval", "document.getElementById('editor-map-inner')"),
             e.ClientX, e.ClientY);
 
-        if (_placingPreset)
+        if (_movingPreset != null)
+        {
+            _movingPreset.X = Math.Round(result.X, 2);
+            _movingPreset.Y = Math.Round(result.Y, 2);
+            _movingPreset = null;
+            RefreshJson();
+        }
+        else if (_placingPreset)
         {
             _pendingPresetX = result.X;
             _pendingPresetY = result.Y;

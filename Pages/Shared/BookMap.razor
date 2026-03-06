@@ -77,7 +77,7 @@
                     @foreach (var character in _data.Characters)
                     {
                         var captured = character;
-                        <div style="display:flex; align-items:center; justify-content:center; gap:6px;">
+                        <div style="display:flex; align-items:center; justify-content:left; gap:6px;">
                             <input type="color" value="@character.Color"
                                    style="width:22px; height:22px; border:none; cursor:pointer; border-radius:4px; flex-shrink:0;"
                                    @onchange="e => UpdateColor(captured, e.Value?.ToString() ?? captured.Color)" />
