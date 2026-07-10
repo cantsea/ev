@@ -25,6 +25,18 @@
             entry.el.style.setProperty('--marker-scale', 1);
         }
     },
+    zoomIn: function (wrapperId) {
+        const entry = window.mapHelper.panzoomInstances[wrapperId];
+        if (entry) {
+            entry.instance.zoomIn();
+        }
+    },
+    zoomOut: function (wrapperId) {
+        const entry = window.mapHelper.panzoomInstances[wrapperId];
+        if (entry) {
+            entry.instance.zoomOut();
+        }
+    },
     getClickPercentage: function (element, clientX, clientY) {
         const img = element.querySelector('img');
         const rect = img ? img.getBoundingClientRect() : element.getBoundingClientRect();

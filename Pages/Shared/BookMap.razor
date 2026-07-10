@@ -3,26 +3,40 @@
 @using ev.Models
 
 <div style="@($"--mud-palette-primary:{PrimaryColor}; --mud-palette-primary-text:white;")">
-    @* TIMELINE *@
-    <MudPaper Elevation="2" Class="pa-4 mb-2">
+    @if (_isLoading)
+    {
+        <MudPaper Elevation="2" Class="pa-6">
+            <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+            <MudText Typo="Typo.body2" Align="Align.Center" Class="mt-3">Loading map data...</MudText>
+        </MudPaper>
+    }
+    else
+    {
+        @if (_loadError != null)
+        {
+            <MudAlert Severity="Severity.Error" Class="mb-2">@_loadError</MudAlert>
+        }
+
+        @* TIMELINE *@
+        <MudPaper Elevation="2" Class="pa-4 mb-2">
         @if (_data.Chapters.Any())
         {
             var chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Class="mb-2">
                 <MudIconButton Icon="@Icons.Material.Filled.SkipPrevious" Size="Size.Small" Color="Color.Primary"
-                               OnClick="() => _chapterIndex = 1"
+                               OnClick="() => SetChapterIndex(1)"
                                Disabled="@(_chapterIndex <= 1)" />
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" Color="Color.Primary"
-                               OnClick="() => _chapterIndex = Math.Max(1, _chapterIndex - 1)"
+                               OnClick="() => SetChapterIndex(Math.Max(1, _chapterIndex - 1))"
                                Disabled="@(_chapterIndex <= 1)" />
                 <MudIconButton Icon="@(_playing? Icons.Material.Filled.Pause : Icons.Material.Filled.PlayArrow)"
                                Size="Size.Small" Color="Color.Primary"
                                OnClick="TogglePlay" />
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" Color="Color.Primary"
-                               OnClick="() => _chapterIndex = Math.Min(chapters.Count, _chapterIndex + 1)"
+                               OnClick="() => SetChapterIndex(Math.Min(chapters.Count, _chapterIndex + 1))"
                                Disabled="@(_chapterIndex >= chapters.Count)" />
                 <MudIconButton Icon="@Icons.Material.Filled.SkipNext" Size="Size.Small" Color="Color.Primary"
-                               OnClick="() => _chapterIndex = chapters.Count"
+                               OnClick="() => SetChapterIndex(chapters.Count)"
                                Disabled="@(_chapterIndex >= chapters.Count)" />
                 <MudDivider Vertical="true" FlexItem="true" Class="mx-2" />
                 <MudIcon Icon="@Icons.Material.Filled.Speed" Size="Size.Small" Color="Color.Primary" />
@@ -32,13 +46,13 @@
             </MudStack>
             <div class="d-none d-md-block">
                 <MudSlider T="int" Min="1" Max="@(chapters.Count)" Step="1"
-                           @bind-Value="_chapterIndex"
+                           Value="_chapterIndex" ValueChanged="SetChapterIndex"
                            Color="Color.Primary"
                            TickMarks="true" />
             </div>
             <div class="d-md-none">
                 <MudSlider T="int" Min="1" Max="@(chapters.Count)" Step="1"
-                           @bind-Value="_chapterIndex"
+                           Value="_chapterIndex" ValueChanged="SetChapterIndex"
                            Color="Color.Primary"
                            TickMarks="true" />
             </div>
@@ -166,7 +180,7 @@
                 <MudText Typo="Typo.h6" Class="mb-2" Style="text-align:center;">Current Chapter</MudText>
                 @if (_data.Chapters.Any())
                 {
-                    <MudSelect T="int" @bind-Value="_chapterIndex" Variant="Variant.Outlined" Class="mb-4">
+                    <MudSelect T="int" Value="_chapterIndex" ValueChanged="SetChapterIndex" Variant="Variant.Outlined" Class="mb-4">
                         @foreach (var chapter in _data.Chapters.OrderBy(c => c.Page))
                         {
                             var index = _data.Chapters.OrderBy(c => c.Page).ToList().IndexOf(chapter) + 1;
@@ -317,7 +331,8 @@
 
             </MudGrid>
         </div>
-    </MudPaper>
+        </MudPaper>
+    }
 
 </div>
 
@@ -329,6 +344,9 @@
     private string _mapInnerId = Guid.NewGuid().ToString("N");
 
     private MapData _data = new();
+    private string? _loadError;
+    private bool _isLoading = true;
+    private bool _panzoomInitialized;
     private int _chapterIndex = 1;
 
     private MapEntry? _hoveredEntry;
@@ -380,14 +398,14 @@
             _playCts = new System.Threading.CancellationTokenSource();
             var token = _playCts.Token;
             var maxIndex = _data.Chapters.Count;
-            if (_chapterIndex >= maxIndex) _chapterIndex = 1;
+            if (_chapterIndex >= maxIndex) SetChapterIndex(1);
             _ = Task.Run(async () =>
             {
                 while (!token.IsCancellationRequested && _chapterIndex < maxIndex)
                 {
                     await Task.Delay(_playDelayMs, token);
                     if (token.IsCancellationRequested) break;
-                    _chapterIndex++;
+                    SetChapterIndex(_chapterIndex + 1);
                     await InvokeAsync(StateHasChanged);
                 }
                 _playing = false;
@@ -404,7 +422,11 @@
         _data.Chapters.OrderBy(c => c.Page).ElementAtOrDefault(_chapterIndex - 1);
 
     private List<ChapterModel> PastChapters =>
-        _data.Chapters.OrderByDescending(c => c.Page).ToList();
+        _data.Chapters
+            .OrderBy(c => c.Page)
+            .Take(Math.Clamp(_chapterIndex, 0, _data.Chapters.Count))
+            .OrderByDescending(c => c.Page)
+            .ToList();
 
     private List<CharacterModel> GetCharactersAtPreset(LocationPreset preset)
     {
@@ -445,20 +467,44 @@
         _selectedPreset = null;
     }
 
+    private void SetChapterIndex(int chapterIndex)
+    {
+        if (_chapterIndex == chapterIndex) return;
+
+        _chapterIndex = chapterIndex;
+        _selectedEntry = null;
+        _selectedPreset = null;
+        _hoveredEntry = null;
+        _hoveredPreset = null;
+    }
+
     protected override async Task OnInitializedAsync()
     {
         try
         {
-            _data = await Http.GetFromJsonAsync<MapData>($"{DataFile}?v={DateTime.UtcNow.Ticks}") ?? new();
+            _data = await Http.GetFromJsonAsync<MapData>($"{DataFile}?v={DateTime.UtcNow.Ticks}")
+                ?? throw new InvalidOperationException("The file contained no map data.");
+            _loadError = null;
         }
-        catch { _data = new(); }
+        catch (Exception ex)
+        {
+            _data = new();
+            _loadError = $"Unable to load map data from '{DataFile}'. {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
         StateHasChanged();
     }
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (!_isLoading && !_panzoomInitialized)
+        {
             await JS.InvokeVoidAsync("mapHelper.initPanzoom", _mapWrapperId, _mapInnerId);
+            _panzoomInitialized = true;
+        }
     }
 
     private async Task ResetZoom() =>

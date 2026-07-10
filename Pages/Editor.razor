@@ -6,7 +6,21 @@
 
 <MudText Typo="Typo.h5" Class="mb-4">Editor</MudText>
 
-<MudPaper Elevation="2" Class="pa-4 mb-4">
+@if (_isLoading)
+{
+    <MudPaper Elevation="2" Class="pa-6">
+        <MudProgressLinear Indeterminate="true" Color="Color.Primary" />
+        <MudText Typo="Typo.body2" Align="Align.Center" Class="mt-3">Loading editor data...</MudText>
+    </MudPaper>
+}
+else
+{
+    @if (_loadError != null)
+    {
+        <MudAlert Severity="Severity.Error" Class="mb-4">@_loadError</MudAlert>
+    }
+
+    <MudPaper Elevation="2" Class="pa-4 mb-4">
     <MudSelect T="string" Label="Editing Book" Value="_dataFile" ValueChanged="OnBookChanged"
                Variant="Variant.Outlined" Style="max-width:300px;">
         @foreach (var book in Books)
@@ -37,7 +51,7 @@
 
             <MudText Typo="Typo.h6" Class="mb-2">Book Settings</MudText>
             <MudNumericField T="int" Label="Total Pages" @bind-Value="_data.TotalPages"
-                             Variant="Variant.Outlined" Class="mb-4"
+                             Variant="Variant.Outlined" Class="mb-4" Min="1"
                              OnBlur="RefreshJson" />
 
             <MudDivider Class="mb-4" />
@@ -220,7 +234,7 @@
                         {
                             var ordered = FilteredEntries
                             .Where(e => e.CharacterId == character.Id)
-                            .OrderBy(e => e.Progress).ToList();
+                            .OrderBy(e => e.Page).ToList();
                             for (int i = 0; i < ordered.Count - 1; i++)
                             {
                                 var a = ordered[i]; var b = ordered[i + 1];
@@ -399,10 +413,12 @@
 <MudPaper Elevation="2" Class="pa-4 mt-4">
     <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2">
         <MudText Typo="Typo.h6" Style="flex:1">JSON Output</MudText>
-        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="CopyJson">Copy</MudButton>
+        <MudButton Variant="Variant.Outlined" Size="Size.Small" OnClick="CopyJson"
+                   Disabled="@(_loadError != null)">Copy</MudButton>
     </MudStack>
     <MudTextField Value="@_json" Variant="Variant.Outlined" Lines="12" ReadOnly="true" />
-</MudPaper>
+    </MudPaper>
+}
 
 @code {
     // *** Add new books here ***
@@ -420,6 +436,9 @@
     private MapEntry? _selectedEntry;
     private MapData _data = new();
     private string _json = "";
+    private string? _loadError;
+    private bool _isLoading = true;
+    private bool _panzoomInitialized;
     private int _chapterIndex = 1;
     private bool _hideChapterRows = true;
 
@@ -467,6 +486,7 @@
             .ToList();
 
     private bool CanAddEntry =>
+        _data.TotalPages > 0 &&
         !string.IsNullOrWhiteSpace(_formCharacterId) &&
         !string.IsNullOrWhiteSpace(_formLocation) &&
         _pendingX.HasValue;
@@ -528,11 +548,25 @@
 
     private async Task LoadData()
     {
+        _isLoading = true;
+        _panzoomInitialized = false;
+        await InvokeAsync(StateHasChanged);
+
         try
         {
-            _data = await Http.GetFromJsonAsync<MapData>($"{_dataFile}?v={DateTime.UtcNow.Ticks}") ?? new();
+            _data = await Http.GetFromJsonAsync<MapData>($"{_dataFile}?v={DateTime.UtcNow.Ticks}")
+                ?? throw new InvalidOperationException("The file contained no map data.");
+            _loadError = null;
         }
-        catch { _data = new(); }
+        catch (Exception ex)
+        {
+            _data = new();
+            _loadError = $"Unable to load map data from '{_dataFile}'. {ex.Message}";
+        }
+        finally
+        {
+            _isLoading = false;
+        }
         RefreshJson();
         StateHasChanged();
     }
@@ -582,8 +616,11 @@
 
     protected override async Task OnAfterRenderAsync(bool firstRender)
     {
-        if (firstRender)
+        if (!_isLoading && !_panzoomInitialized)
+        {
             await JS.InvokeVoidAsync("mapHelper.initPanzoom", "editor-map", "editor-map-inner");
+            _panzoomInitialized = true;
+        }
     }
 
     private async Task ResetZoom() =>
