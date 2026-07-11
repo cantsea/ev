@@ -21,7 +21,7 @@
         <MudPaper Elevation="2" Class="pa-4 mb-2">
         @if (_data.Chapters.Any())
         {
-            var chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
+            var chapters = _data.Chapters.OrderBy(c => c.Index).ToList();
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Class="mb-2">
                 <MudIconButton Icon="@Icons.Material.Filled.SkipPrevious" Size="Size.Small" Color="Color.Primary"
                                OnClick="() => SetChapterIndex(1)"
@@ -181,9 +181,9 @@
                 @if (_data.Chapters.Any())
                 {
                     <MudSelect T="int" Value="_chapterIndex" ValueChanged="SetChapterIndex" Variant="Variant.Outlined" Class="mb-4">
-                        @foreach (var chapter in _data.Chapters.OrderBy(c => c.Page))
+                        @foreach (var chapter in _data.Chapters.OrderBy(c => c.Index))
                         {
-                            var index = _data.Chapters.OrderBy(c => c.Page).ToList().IndexOf(chapter) + 1;
+                            var index = _data.Chapters.OrderBy(c => c.Index).ToList().IndexOf(chapter) + 1;
                             <MudSelectItem T="int" Value="@index">@chapter.Name</MudSelectItem>
                         }
                     </MudSelect>
@@ -272,7 +272,10 @@
                                              Style="@($"opacity:{(isCurrent ? "1.0" : "0.5")}")">
                                 <ItemContent>
                                     <MudText Typo="Typo.body2" Style="text-align:center;"><strong>@chapter.Name</strong></MudText>
-                                    <MudText Typo="Typo.caption" Style="text-align:center;">p.@chapter.Page</MudText>
+                                    @if (chapter.Page.HasValue)
+                                    {
+                                        <MudText Typo="Typo.caption" Style="text-align:center;">p.@chapter.Page</MudText>
+                                    }
                                 </ItemContent>
                             </MudTimelineItem>
                         }
@@ -296,9 +299,7 @@
                                     var entry = trail[i];
                                     var entryOpacity = GetOpacity(i, trail.Count);
                                     var entryChapter = _data.Chapters
-                                    .Where(ch => ch.Page <= entry.Page)
-                                    .OrderByDescending(ch => ch.Page)
-                                    .FirstOrDefault();
+                                    .FirstOrDefault(ch => ch.Index == entry.ChapterIndex);
 
                                     if (entryChapter != null && entryChapter != lastChapterShown)
                                     {
@@ -316,7 +317,7 @@
                                                      Style="@($"opacity:{entryOpacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}")">
                                         <ItemContent>
                                             <MudText Typo="Typo.body2" Style="text-align:center;"><strong>@entry.Location</strong></MudText>
-                                            <MudText Typo="Typo.caption" Style="text-align:center;">p.@entry.Page</MudText>
+                                            <MudText Typo="Typo.caption" Style="text-align:center;">@FormatEntryPosition(entry)</MudText>
                                             @if (!string.IsNullOrEmpty(entry.Note))
                                             {
                                                 <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-align:center;">@entry.Note</MudText>
@@ -419,13 +420,13 @@
     }
 
     private ChapterModel? SelectedChapter =>
-        _data.Chapters.OrderBy(c => c.Page).ElementAtOrDefault(_chapterIndex - 1);
+        _data.Chapters.OrderBy(c => c.Index).ElementAtOrDefault(_chapterIndex - 1);
 
     private List<ChapterModel> PastChapters =>
         _data.Chapters
-            .OrderBy(c => c.Page)
+            .OrderBy(c => c.Index)
             .Take(Math.Clamp(_chapterIndex, 0, _data.Chapters.Count))
-            .OrderByDescending(c => c.Page)
+            .OrderByDescending(c => c.Index)
             .ToList();
 
     private List<CharacterModel> GetCharactersAtPreset(LocationPreset preset)
@@ -484,6 +485,7 @@
         {
             _data = await Http.GetFromJsonAsync<MapData>($"{DataFile}?v={DateTime.UtcNow.Ticks}")
                 ?? throw new InvalidOperationException("The file contained no map data.");
+            _data.NormalizeTimeline();
             _loadError = null;
         }
         catch (Exception ex)
@@ -529,10 +531,17 @@
     {
         return _data.Entries
             .Where(e => e.CharacterId == characterId &&
-                        (SelectedChapter == null || e.Page < SelectedChapter.Page))
-            .OrderByDescending(e => e.Page)
+                        (SelectedChapter == null || e.ChapterIndex < SelectedChapter.Index))
+            .OrderByDescending(e => e.ChapterIndex)
+            .ThenByDescending(e => e.Sequence)
             .Take(5)
             .ToList();
+    }
+
+    private static string FormatEntryPosition(MapEntry entry)
+    {
+        var position = $"Ch. {entry.ChapterIndex}, event {entry.Sequence}";
+        return entry.Page.HasValue ? $"{position} · p.{entry.Page.Value:g}" : position;
     }
 
     private int GetLabelOffset(string characterId, double midX, double midY)

@@ -3,6 +3,7 @@
 @inject HttpClient Http
 @using ev.Models
 @using System.Text.Json
+@using System.Text.Json.Serialization
 
 <MudText Typo="Typo.h5" Class="mb-4">Editor</MudText>
 
@@ -33,7 +34,7 @@ else
 <MudPaper Elevation="2" Class="pa-4 mb-4">
     @if (_data.Chapters.Any())
     {
-        var chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
+        var chapters = _data.Chapters.OrderBy(c => c.Index).ToList();
         <MudSlider T="int" Min="1" Max="@(chapters.Count + 1)" Step="1"
                    @bind-Value="_chapterIndex"
                    Color="Color.Primary"
@@ -75,7 +76,7 @@ else
             <MudText Typo="Typo.h6" Class="mb-2">Add Chapter</MudText>
             <MudTextField @bind-Value="_newChapterName" Label="Chapter Name"
                           Variant="Variant.Outlined" Class="mb-2" />
-            <MudNumericField T="double" Label="Starting Page" @bind-Value="_newChapterPage"
+            <MudNumericField T="double?" Label="Starting Page (optional)" @bind-Value="_newChapterPage"
                              Variant="Variant.Outlined" Class="mb-2" Min="0.1" />
             <MudButton Variant="Variant.Filled" Color="Color.Secondary"
                        FullWidth="true" OnClick="AddChapter"
@@ -87,9 +88,9 @@ else
 
             <MudText Typo="Typo.h6" Class="mb-2">Current Chapter</MudText>
             <MudSelect T="int" @bind-Value="_chapterIndex" Variant="Variant.Outlined" Class="mb-2">
-                @foreach (var chapter in _data.Chapters.OrderBy(c => c.Page))
+                @foreach (var chapter in _data.Chapters.OrderBy(c => c.Index))
                 {
-                    var index = _data.Chapters.OrderBy(c => c.Page).ToList().IndexOf(chapter) + 1;
+                    var index = _data.Chapters.OrderBy(c => c.Index).ToList().IndexOf(chapter) + 1;
                     <MudSelectItem T="int" Value="@index">@chapter.Name</MudSelectItem>
                 }
                 <MudSelectItem T="int" Value="@(_data.Chapters.Count + 1)">End</MudSelectItem>
@@ -160,7 +161,16 @@ else
                              ResetValueOnEmptyText="false"
                              CoerceText="false" />
 
-            <MudNumericField T="double" Label="Page Number" @bind-Value="_formPage"
+            <MudSelect T="int" Label="Event Chapter" @bind-Value="_formChapterIndex"
+                       Variant="Variant.Outlined" Class="mb-2">
+                @foreach (var chapter in _data.Chapters.OrderBy(c => c.Index))
+                {
+                    <MudSelectItem T="int" Value="@chapter.Index">@($"{chapter.Index}. {chapter.Name}")</MudSelectItem>
+                }
+            </MudSelect>
+            <MudNumericField T="int" Label="Event Sequence" @bind-Value="_formSequence"
+                             Variant="Variant.Outlined" Class="mb-2" Min="1" />
+            <MudNumericField T="double?" Label="Page Number (optional)" @bind-Value="_formPage"
                              Variant="Variant.Outlined" Class="mb-2" Min="0.1" />
             <MudTextField @bind-Value="_formLocation" Label="Location"
                           Variant="Variant.Outlined" Class="mb-2" />
@@ -197,7 +207,7 @@ else
                     Delete Selected Marker
                 </MudButton>
                 <MudText Typo="Typo.caption" Class="mt-1">
-                    Selected: @(_data.Characters.FirstOrDefault(c => c.Id == _selectedEntry.CharacterId)?.Name) — @_selectedEntry.Location (p.@_selectedEntry.Page)
+                    Selected: @(_data.Characters.FirstOrDefault(c => c.Id == _selectedEntry.CharacterId)?.Name) — @_selectedEntry.Location (@FormatEntryPosition(_selectedEntry))
                     @if (_selectedEntry.IsInvisible)
                     {
                         <MudChip T="string" Size="Size.Small" Color="Color.Default">invisible</MudChip>
@@ -234,7 +244,9 @@ else
                         {
                             var ordered = FilteredEntries
                             .Where(e => e.CharacterId == character.Id)
-                            .OrderBy(e => e.Page).ToList();
+                            .OrderBy(e => e.ChapterIndex)
+                            .ThenBy(e => e.Sequence)
+                            .ToList();
                             for (int i = 0; i < ordered.Count - 1; i++)
                             {
                                 var a = ordered[i]; var b = ordered[i + 1];
@@ -266,7 +278,7 @@ else
                         var isSelected = _selectedEntry == entry;
                         @if (entry.IsInvisible)
                         {
-                            <MudTooltip Text="@($"{character.Name} — {entry.Location} (p.{entry.Page}) [invisible]")">
+                            <MudTooltip Text="@($"{character.Name} — {entry.Location} ({FormatEntryPosition(entry)}) [invisible]")">
                                 <MudIconButton Icon="@Icons.Material.Filled.RadioButtonUnchecked"
                                                Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:{character.Color}; opacity:{(isSelected ? "1.0" : "0.5")};")"
                                                OnClick="@((e) => SelectEntry(capturedEntry))" />
@@ -274,7 +286,7 @@ else
                         }
                         else
                         {
-                            <MudTooltip Text="@($"{character.Name} — {entry.Location} (p.{entry.Page})")">
+                            <MudTooltip Text="@($"{character.Name} — {entry.Location} ({FormatEntryPosition(entry)})")">
                                 <MudIconButton Icon="@Icons.Material.Filled.Place"
                                                Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color}; opacity:{(isSelected ? "1.0" : "0.75")};")"
                                                OnClick="@((e) => SelectEntry(capturedEntry))" />
@@ -372,8 +384,9 @@ else
             <HeaderContent>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Character)">Character</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page)" InitialDirection="SortDirection.Ascending">Page</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Progress)">Progress</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.ChapterIndex)" InitialDirection="SortDirection.Ascending">Chapter</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Sequence)">Sequence</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page ?? double.MaxValue)">Page</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Location / Chapter</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
@@ -393,8 +406,9 @@ else
                     }
                 </MudTd>
                 <MudTd>@context.Character</MudTd>
-                <MudTd>@(context.Page > 0 ? context.Page.ToString() : "—")</MudTd>
-                <MudTd>@(context.Progress > 0 ? $"{context.Progress:P1}" : "—")</MudTd>
+                <MudTd>@(context.ChapterIndex > 0 ? context.ChapterIndex.ToString() : "—")</MudTd>
+                <MudTd>@(context.Sequence > 0 ? context.Sequence.ToString() : "—")</MudTd>
+                <MudTd>@(context.Page.HasValue ? context.Page.Value.ToString("g") : "—")</MudTd>
                 <MudTd>@context.Label</MudTd>
                 <MudTd>@(context.X.HasValue ? $"{context.X:F1}" : "—")</MudTd>
                 <MudTd>@(context.Y.HasValue ? $"{context.Y:F1}" : "—")</MudTd>
@@ -445,7 +459,7 @@ else
     private string _newCharName = "";
     private string _newCharColor = "#3b82f6";
     private string _newChapterName = "";
-    private double _newChapterPage = 1;
+    private double? _newChapterPage;
 
     private string _newPresetName = "";
     private double? _pendingPresetX;
@@ -455,7 +469,9 @@ else
     private string _selectedPresetId = "";
 
     private string _formCharacterId = "";
-    private double _formPage = 1;
+    private int _formChapterIndex = 1;
+    private int _formSequence = 1;
+    private double? _formPage;
     private string _formLocation = "";
     private string _formNote = "";
     private bool _formIsInvisible = false;
@@ -477,34 +493,39 @@ else
 
     private ChapterModel? SelectedChapter =>
         _data.Chapters.Any()
-            ? _data.Chapters.OrderBy(c => c.Page).ElementAtOrDefault(_chapterIndex - 1)
+            ? _data.Chapters.OrderBy(c => c.Index).ElementAtOrDefault(_chapterIndex - 1)
             : null;
 
     private List<MapEntry> FilteredEntries =>
         _data.Entries
-            .Where(e => !_data.Chapters.Any() || IsEnd || e.Page < SelectedChapter!.Page)
+            .Where(e => !_data.Chapters.Any() || IsEnd || e.ChapterIndex < SelectedChapter!.Index)
             .ToList();
 
     private bool CanAddEntry =>
         _data.TotalPages > 0 &&
+        _data.Chapters.Any(c => c.Index == _formChapterIndex) &&
+        _formSequence > 0 &&
         !string.IsNullOrWhiteSpace(_formCharacterId) &&
         !string.IsNullOrWhiteSpace(_formLocation) &&
-        _pendingX.HasValue;
+        _pendingX.HasValue &&
+        !_data.Entries.Any(e => e.CharacterId == _formCharacterId &&
+                                e.ChapterIndex == _formChapterIndex &&
+                                e.Sequence == _formSequence);
 
     private bool CanAddPreset =>
         !string.IsNullOrWhiteSpace(_newPresetName) &&
         _pendingPresetX.HasValue;
 
     private record TableRow(
-        string Type, string Character, double Page, double Progress,
+        string Type, string Character, int ChapterIndex, int Sequence, double? Page,
         string Label, double? X, double? Y, string Note, bool Invisible, object Source);
 
     private List<TableRow> CharacterAndPresetRows =>
         _data.Characters.Select(c => new TableRow(
-            Type: "Character", Character: "", Page: 0, Progress: 0,
+            Type: "Character", Character: "", ChapterIndex: 0, Sequence: 0, Page: null,
             Label: c.Name, X: null, Y: null, Note: "", Invisible: false, Source: c))
         .Concat(_data.Locations.Select(p => new TableRow(
-            Type: "Preset", Character: "", Page: 0, Progress: 0,
+            Type: "Preset", Character: "", ChapterIndex: 0, Sequence: 0, Page: null,
             Label: p.Name, X: p.X, Y: p.Y, Note: "", Invisible: false, Source: p)))
         .ToList();
 
@@ -512,17 +533,17 @@ else
         FilteredEntries.Select(e => new TableRow(
             Type: "Entry",
             Character: _data.Characters.FirstOrDefault(c => c.Id == e.CharacterId)?.Name ?? "?",
-            Page: e.Page, Progress: e.Progress, Label: e.Location,
+            ChapterIndex: e.ChapterIndex, Sequence: e.Sequence, Page: e.Page, Label: e.Location,
             X: e.X, Y: e.Y, Note: e.Note, Invisible: e.IsInvisible, Source: e))
         .Concat(_data.Chapters
             .Where(ch =>
             {
-                var ordered = _data.Chapters.OrderBy(c => c.Page).ToList();
+                var ordered = _data.Chapters.OrderBy(c => c.Index).ToList();
                 return ordered.IndexOf(ch) < _chapterIndex;
             })
             .Select(ch => new TableRow(
-                Type: "Chapter", Character: "", Page: ch.Page,
-                Progress: ch.GetProgress(_data.TotalPages), Label: ch.Name,
+                Type: "Chapter", Character: "", ChapterIndex: ch.Index, Sequence: 0, Page: ch.Page,
+                Label: ch.Name,
                 X: null, Y: null, Note: "", Invisible: false, Source: ch)))
         .ToList();
 
@@ -543,6 +564,9 @@ else
         _placingPreset = false;
         _movingPreset = null;
         _selectedPresetId = "";
+        _formChapterIndex = 1;
+        _formSequence = 1;
+        _formPage = null;
         await LoadData();
     }
 
@@ -556,6 +580,9 @@ else
         {
             _data = await Http.GetFromJsonAsync<MapData>($"{_dataFile}?v={DateTime.UtcNow.Ticks}")
                 ?? throw new InvalidOperationException("The file contained no map data.");
+            _data.NormalizeTimeline();
+            _formChapterIndex = _data.Chapters.FirstOrDefault()?.Index ?? 1;
+            _formSequence = 1;
             _loadError = null;
         }
         catch (Exception ex)
@@ -579,7 +606,10 @@ else
             if (_selectedEntry == entry) _selectedEntry = null;
         }
         else if (row.Source is ChapterModel chapter)
+        {
             _data.Chapters.Remove(chapter);
+            _data.Entries.RemoveAll(e => e.ChapterIndex == chapter.Index);
+        }
         else if (row.Source is LocationPreset preset)
             _data.Locations.Remove(preset);
         else if (row.Source is CharacterModel character)
@@ -695,11 +725,15 @@ else
         if (string.IsNullOrWhiteSpace(_newChapterName)) return;
         _data.Chapters.Add(new ChapterModel
         {
+            Index = _data.Chapters.Select(c => c.Index).DefaultIfEmpty().Max() + 1,
             Name = _newChapterName.Trim(),
             Page = _newChapterPage
         });
-        _data.Chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
+        _data.Chapters = _data.Chapters.OrderBy(c => c.Index).ToList();
+        if (_data.Chapters.Count == 1)
+            _formChapterIndex = _data.Chapters[0].Index;
         _newChapterName = "";
+        _newChapterPage = null;
         RefreshJson();
     }
 
@@ -727,20 +761,26 @@ else
         _data.Entries.Add(new MapEntry
         {
             CharacterId = _formCharacterId,
+            ChapterIndex = _formChapterIndex,
+            Sequence = _formSequence,
             Page = _formPage,
-            Progress = Math.Round(_formPage / _data.TotalPages, 4),
             Location = _formLocation.Trim(),
             X = Math.Round(_pendingX!.Value, 2),
             Y = Math.Round(_pendingY!.Value, 2),
             Note = _formNote.Trim(),
             IsInvisible = _formIsInvisible
         });
-        _data.Entries = _data.Entries.OrderBy(e => e.CharacterId).ThenBy(e => e.Page).ToList();
+        _data.Entries = _data.Entries
+            .OrderBy(e => e.CharacterId)
+            .ThenBy(e => e.ChapterIndex)
+            .ThenBy(e => e.Sequence)
+            .ToList();
         _pendingX = null;
         _pendingY = null;
         _formLocation = "";
         _formNote = "";
         _formIsInvisible = false;
+        _formSequence++;
         _selectedPresetId = "";
         RefreshJson();
     }
@@ -760,6 +800,8 @@ else
         if (_selectedEntry != null)
         {
             _formCharacterId = entry.CharacterId;
+            _formChapterIndex = entry.ChapterIndex;
+            _formSequence = entry.Sequence;
             _formPage = entry.Page;
             _formLocation = entry.Location;
             _formNote = entry.Note;
@@ -769,12 +811,22 @@ else
 
     private void RefreshJson()
     {
-        _json = JsonSerializer.Serialize(_data, new JsonSerializerOptions { WriteIndented = true });
+        _json = JsonSerializer.Serialize(_data, new JsonSerializerOptions
+        {
+            WriteIndented = true,
+            DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull
+        });
     }
 
     private async Task CopyJson()
     {
         await JS.InvokeVoidAsync("navigator.clipboard.writeText", _json);
+    }
+
+    private static string FormatEntryPosition(MapEntry entry)
+    {
+        var position = $"Ch. {entry.ChapterIndex}, event {entry.Sequence}";
+        return entry.Page.HasValue ? $"{position} · p.{entry.Page.Value:g}" : position;
     }
 
     private record ClickResult(double X, double Y);
