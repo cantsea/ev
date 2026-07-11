@@ -825,7 +825,7 @@ else
 
     private static string FormatEntryPosition(MapEntry entry)
     {
-        var position = $"Ch. {entry.ChapterIndex}, event {entry.Sequence}";
+        var position = $"Ch. {entry.ChapterIndex}, Event {entry.Sequence}";
         return entry.Page.HasValue ? $"{position} · p.{entry.Page.Value:g}" : position;
     }
 

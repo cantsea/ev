@@ -259,10 +259,10 @@
 
     <MudPaper Elevation="2" Class="pa-4">
         <MudText Typo="Typo.h6" Class="mb-3" Style="text-align:center;">Character Trails</MudText>
-        <div style="overflow-x:auto;">
-            <MudGrid Style="flex-wrap:nowrap; min-width:max-content;">
+        <div class="character-trails-scroll">
+            <div class="character-trails-grid">
 
-                <MudItem xs="12" sm="6" md="2">
+                <div class="character-trail-column book-progress-column">
                     <MudText Typo="Typo.subtitle2" Class="mb-1" Style="text-align:center;">📖 Book Progress</MudText>
                     <MudTimeline TimelinePosition="TimelinePosition.Start">
                         @foreach (var chapter in PastChapters)
@@ -280,14 +280,14 @@
                             </MudTimelineItem>
                         }
                     </MudTimeline>
-                </MudItem>
+                </div>
 
                 @foreach (var character in _data.Characters)
                 {
                     var trail = GetTrail(character.Id).Where(e => !e.IsInvisible).ToList();
                     if (!trail.Any()) continue;
 
-                    <MudItem xs="12" sm="6" md="2">
+                    <div class="character-trail-column">
                         <MudText Typo="Typo.subtitle2" Style="@($"color:{character.Color}; text-align:center;")" Class="mb-1">
                             @character.Name
                         </MudText>
@@ -306,7 +306,7 @@
                                         lastChapterShown = entryChapter;
                                         <MudTimelineItem Color="Color.Default" Size="Size.Small" Style="opacity:0.5">
                                             <ItemContent>
-                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-align:center;">
+                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Class="trail-chapter-label">
                                                     ── @entryChapter.Name ──
                                                 </MudText>
                                             </ItemContent>
@@ -316,21 +316,21 @@
                                     <MudTimelineItem Color="Color.Default" Size="Size.Small"
                                                      Style="@($"opacity:{entryOpacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}")">
                                         <ItemContent>
-                                            <MudText Typo="Typo.body2" Style="text-align:center;"><strong>@entry.Location</strong></MudText>
-                                            <MudText Typo="Typo.caption" Style="text-align:center;">@FormatEntryPosition(entry)</MudText>
+                                            <MudText Typo="Typo.body2" Class="trail-location"><strong>@entry.Location</strong></MudText>
+                                            <MudText Typo="Typo.caption" Class="trail-position">@FormatEntryPosition(entry)</MudText>
                                             @if (!string.IsNullOrEmpty(entry.Note))
                                             {
-                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-align:center;">@entry.Note</MudText>
+                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Class="trail-note">@entry.Note</MudText>
                                             }
                                         </ItemContent>
                                     </MudTimelineItem>
                                 }
                             }
                         </MudTimeline>
-                    </MudItem>
+                    </div>
                 }
 
-            </MudGrid>
+            </div>
         </div>
         </MudPaper>
     }
@@ -540,7 +540,7 @@
 
     private static string FormatEntryPosition(MapEntry entry)
     {
-        var position = $"Ch. {entry.ChapterIndex}, event {entry.Sequence}";
+        var position = $"Ch. {entry.ChapterIndex}, Event {entry.Sequence}";
         return entry.Page.HasValue ? $"{position} · p.{entry.Page.Value:g}" : position;
     }
 
