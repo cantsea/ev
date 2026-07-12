@@ -275,7 +275,7 @@ else
                         {
                             <MudTooltip Text="@($"{character.Name} — {entry.Location} ({FormatEntryPosition(entry)}) [invisible]")">
                                 <MudIconButton Icon="@Icons.Material.Filled.RadioButtonUnchecked"
-                                               aria-label="@($"Edit {character.Name} at {entry.Location}")"
+                                               aria-label="@($"Edit {character.Name} at {entry.Location}, page {entry.Page:g}")"
                                                Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:{character.Color}; opacity:{(isSelected ? "1.0" : "0.5")};")"
                                                OnClick="@((e) => SelectEntry(capturedEntry))" />
                             </MudTooltip>
@@ -284,7 +284,7 @@ else
                         {
                             <MudTooltip Text="@($"{character.Name} — {entry.Location} ({FormatEntryPosition(entry)})")">
                                 <MudIconButton Icon="@Icons.Material.Filled.Place"
-                                               aria-label="@($"Edit {character.Name} at {entry.Location}")"
+                                               aria-label="@($"Edit {character.Name} at {entry.Location}, page {entry.Page:g}")"
                                                Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color}; opacity:{(isSelected ? "1.0" : "0.75")};")"
                                                OnClick="@((e) => SelectEntry(capturedEntry))" />
                             </MudTooltip>
@@ -413,7 +413,7 @@ else
                     @if (context.Source is MapEntry editableEntry)
                     {
                         <MudIconButton Icon="@Icons.Material.Filled.Edit"
-                                       aria-label="@($"Edit entry: {context.Label}")"
+                                       aria-label="@($"Edit {context.Character} entry at page {context.Page:g}: {context.Label}")"
                                        Size="Size.Small" Color="Color.Primary"
                                        OnClick="() => BeginEditEntry(editableEntry)" />
                     }
@@ -624,6 +624,7 @@ else
 
     private void SelectPresetForMove(LocationPreset preset)
     {
+        if (_selectedEntry != null) ResetEntryForm();
         _movingPreset = _movingPreset == preset ? null : preset;
         _placingPreset = false;
     }
@@ -799,6 +800,8 @@ else
 
     private void BeginEditEntry(MapEntry entry)
     {
+        _movingPreset = null;
+        _placingPreset = false;
         _selectedEntry = entry;
         _formCharacterId = entry.CharacterId;
         _formPage = entry.Page;
