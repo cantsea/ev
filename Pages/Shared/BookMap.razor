@@ -1,6 +1,7 @@
 @inject HttpClient Http
 @inject IJSRuntime JS
 @using ev.Models
+@implements IAsyncDisposable
 
 <div style="@($"--mud-palette-primary:{PrimaryColor}; --mud-palette-primary-text:white;")">
     @if (_isLoading)
@@ -24,18 +25,23 @@
             var chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Class="mb-2">
                 <MudIconButton Icon="@Icons.Material.Filled.SkipPrevious" Size="Size.Small" Color="Color.Primary"
+                               aria-label="First chapter"
                                OnClick="() => SetChapterIndex(1)"
                                Disabled="@(_chapterIndex <= 1)" />
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowBack" Size="Size.Small" Color="Color.Primary"
+                               aria-label="Previous chapter"
                                OnClick="() => SetChapterIndex(Math.Max(1, _chapterIndex - 1))"
                                Disabled="@(_chapterIndex <= 1)" />
                 <MudIconButton Icon="@(_playing? Icons.Material.Filled.Pause : Icons.Material.Filled.PlayArrow)"
                                Size="Size.Small" Color="Color.Primary"
+                               aria-label="@(_playing ? "Pause timeline" : "Play timeline")"
                                OnClick="TogglePlay" />
                 <MudIconButton Icon="@Icons.Material.Filled.ArrowForward" Size="Size.Small" Color="Color.Primary"
+                               aria-label="Next chapter"
                                OnClick="() => SetChapterIndex(Math.Min(chapters.Count, _chapterIndex + 1))"
                                Disabled="@(_chapterIndex >= chapters.Count)" />
                 <MudIconButton Icon="@Icons.Material.Filled.SkipNext" Size="Size.Small" Color="Color.Primary"
+                               aria-label="Last chapter"
                                OnClick="() => SetChapterIndex(chapters.Count)"
                                Disabled="@(_chapterIndex >= chapters.Count)" />
                 <MudDivider Vertical="true" FlexItem="true" Class="mx-2" />
@@ -66,15 +72,16 @@
     <MudGrid Class="mb-4">
         <MudItem xs="12" md="9">
             <MudPaper Elevation="2" Class="pa-2">
-                <MudStack Row="true" AlignItems="AlignItems.Center" Class="mb-2 px-2">
-                    <MudText Typo="Typo.caption" Color="Color.Primary">Scroll to zoom · Drag to pan · Click a marker to select</MudText>
-                    <MudSpacer />
-                    <MudCheckBox T="bool" @bind-Value="_showCharacterLabels" Size="Size.Small" Color="Color.Primary" Label="Names (Beta)" Class="mr-1" />
-                    <MudNumericField T="int" @bind-Value="_labelFontSize" Min="6" Max="32" Step="1" Variant="Variant.Outlined" Style="width:70px;" />
-                    <MudIconButton Icon="@Icons.Material.Filled.ZoomIn" Size="Size.Small" OnClick="ZoomIn" />
-                    <MudIconButton Icon="@Icons.Material.Filled.ZoomOut" Size="Size.Small" OnClick="ZoomOut" />
-                    <MudIconButton Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" OnClick="ResetZoom" />
-                </MudStack>
+                <div class="map-toolbar mb-2 px-2">
+                    <MudText Typo="Typo.caption" Color="Color.Primary" Class="map-toolbar-hint">Scroll to zoom · Drag to pan · Click a marker to select</MudText>
+                    <div class="map-toolbar-controls">
+                        <MudCheckBox T="bool" @bind-Value="_showCharacterLabels" Size="Size.Small" Color="Color.Primary" Label="Names (Beta)" />
+                        <MudNumericField T="int" @bind-Value="_labelFontSize" Min="6" Max="32" Step="1" Variant="Variant.Outlined" Style="width:70px;" aria-label="Character label size" />
+                        <MudIconButton Icon="@Icons.Material.Filled.ZoomIn" Size="Size.Small" aria-label="Zoom in" OnClick="ZoomIn" />
+                        <MudIconButton Icon="@Icons.Material.Filled.ZoomOut" Size="Size.Small" aria-label="Zoom out" OnClick="ZoomOut" />
+                        <MudIconButton Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" aria-label="Reset zoom" OnClick="ResetZoom" />
+                    </div>
+                </div>
 
                 <div id="@_mapWrapperId" style="overflow: hidden; width: 100%; touch-action: none;">
                     <div id="@_mapInnerId" style="position:relative; display:inline-block; width:100%;">
@@ -134,9 +141,10 @@
                             {
                                 var entry = trail[i];
                                 if (entry.IsInvisible) continue;
-                                if (_data.Locations.Any(p => Math.Abs(p.X - entry.X) < 0.01 && Math.Abs(p.Y - entry.Y) < 0.01)) continue;
+                                if (_data.Locations.Any(p => IsAtPreset(entry, p))) continue;
                                 var opacity = GetOpacity(i, trail.Count);
                                 <MudIconButton Icon="@Icons.Material.Filled.Place"
+                                               aria-hidden="true" tabindex="-1"
                                                Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color}; opacity:{opacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}; pointer-events:none;")" />
                             }
                         }
@@ -147,11 +155,12 @@
                             if (!trail.Any()) continue;
                             var current = trail[0];
                             if (current.IsInvisible) continue;
-                            if (_data.Locations.Any(p => Math.Abs(p.X - current.X) < 0.01 && Math.Abs(p.Y - current.Y) < 0.01)) continue;
+                            if (_data.Locations.Any(p => IsAtPreset(current, p))) continue;
                             var capturedEntry = current;
                             var capturedChar = character;
                             var isSelected = _selectedEntry == capturedEntry;
                             <MudIconButton Icon="@Icons.Material.Filled.Place"
+                                           aria-label="@($"{character.Name} at {current.Location}")"
                                            Style="@($"position:absolute; left:{current.X:F2}%; top:{current.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color}; filter:{(isSelected ? "drop-shadow(0 0 4px white)" : "none")};")"
                                            @onmouseenter="() => { if (_selectedEntry == null && _selectedPreset == null) { _hoveredEntry = capturedEntry; _hoveredPreset = null; } }"
                                            @onmouseleave="() => { if (_selectedEntry == null && _selectedPreset == null) _hoveredEntry = null; }"
@@ -164,6 +173,7 @@
                             var charsHere = GetCharactersAtPreset(preset);
                             var isSelected = _selectedPreset == preset;
                             <MudIconButton Icon="@(charsHere.Any() ? Icons.Material.Filled.Circle : Icons.Material.Outlined.Circle)"
+                                           aria-label="@($"Location: {preset.Name}")"
                                            Style="@($"position:absolute; left:{preset.X:F2}%; top:{preset.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:#f59e0b; opacity:{(isSelected ? "1.0" : "0.6")}; filter:{(isSelected ? "drop-shadow(0 0 4px white)" : "none")};")"
                                            @onmouseenter="() => { if (_selectedEntry == null && _selectedPreset == null) { _hoveredPreset = capturedPreset; _hoveredEntry = null; } }"
                                            @onmouseleave="() => { if (_selectedEntry == null && _selectedPreset == null) _hoveredPreset = null; }"
@@ -437,7 +447,7 @@
             if (!trail.Any()) continue;
             var current = trail[0];
             if (current.IsInvisible) continue;
-            if (Math.Abs(current.X - preset.X) < 0.01 && Math.Abs(current.Y - preset.Y) < 0.01)
+            if (IsAtPreset(current, preset))
                 result.Add(character);
         }
         return result;
@@ -540,6 +550,10 @@
         return $"p.{entry.Page:g}";
     }
 
+    private static bool IsAtPreset(MapEntry entry, LocationPreset preset) =>
+        string.Equals(entry.Location.Trim(), preset.Name.Trim(), StringComparison.OrdinalIgnoreCase) ||
+        (Math.Abs(entry.X - preset.X) < 0.01 && Math.Abs(entry.Y - preset.Y) < 0.01);
+
     private int GetLabelOffset(string characterId, double midX, double midY)
     {
         // Find all characters whose most recent trail midpoint is near this one
@@ -562,5 +576,12 @@
     {
         double[] opacities = { 1.0, 0.75, 0.50, 0.30, 0.15 };
         return index < opacities.Length ? opacities[index] : 0.15;
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        _playCts?.Cancel();
+        _playCts?.Dispose();
+        await JS.InvokeVoidAsync("mapHelper.destroyPanzoom", _mapWrapperId);
     }
 }

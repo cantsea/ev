@@ -4,7 +4,7 @@ Timeline order is based on printed page numbers.
 
 ## Chapters
 
-Each chapter records its name and starting page. Chapters are ordered by `Page`.
+Each chapter records its name and starting page. Chapters are ordered by `Page`, and every chapter must have a unique value. If two chapters begin on the same printed page, use a decimal boundary such as `60` and `60.5` so events from the first chapter can be revealed before the second.
 
 ```json
 {

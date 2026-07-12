@@ -101,3 +101,35 @@ a, .btn-link {
 code {
     color: #c02d76;
 }
+
+.map-toolbar {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    min-width: 0;
+}
+
+.map-toolbar-hint {
+    flex: 1 1 auto;
+    min-width: 0;
+}
+
+.map-toolbar-controls {
+    display: flex;
+    align-items: center;
+    flex: 0 0 auto;
+    gap: 0.25rem;
+}
+
+@media (max-width: 600px) {
+    .map-toolbar {
+        align-items: stretch;
+        flex-direction: column;
+    }
+
+    .map-toolbar-controls {
+        flex-wrap: wrap;
+        justify-content: flex-end;
+        width: 100%;
+    }
+}

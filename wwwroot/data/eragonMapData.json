@@ -1,4 +1,4 @@
-﻿{
+{
   "TotalPages": 498,
   "Characters": [
     {
@@ -75,7 +75,7 @@
       "Page": 19
     },
     {
-      "Name": "Fate\u0027s Gift",
+      "Name": "Fate's Gift",
       "Page": 35
     },
     {
@@ -96,7 +96,7 @@
     },
     {
       "Name": "Strangers in Carvahall",
-      "Page": 60
+      "Page": 60.5
     },
     {
       "Name": "Flight of Destiny",
@@ -115,7 +115,7 @@
       "Page": 90
     },
     {
-      "Name": "A Rider\\\u0027s Blade",
+      "Name": "A Rider's Blade",
       "Page": 92
     },
     {
@@ -147,7 +147,7 @@
       "Page": 152
     },
     {
-      "Name": "Through a Dragon\u0027s Eye",
+      "Name": "Through a Dragon's Eye",
       "Page": 161
     },
     {
@@ -199,7 +199,7 @@
       "Page": 255
     },
     {
-      "Name": "The Ra\u0027zac\u0027s Revenge",
+      "Name": "The Ra'zac's Revenge",
       "Page": 264
     },
     {
@@ -215,7 +215,7 @@
       "Page": 278
     },
     {
-      "Name": "Capture at Gil\u0027ead",
+      "Name": "Capture at Gil'ead",
       "Page": 285
     },
     {
@@ -275,7 +275,7 @@
       "Page": 420
     },
     {
-      "Name": "Mandrake Root and Newt\u0027s Tongue",
+      "Name": "Mandrake Root and Newt's Tongue",
       "Page": 433
     },
     {
@@ -283,7 +283,7 @@
       "Page": 439
     },
     {
-      "Name": "Arya\u0027s Test",
+      "Name": "Arya's Test",
       "Page": 453
     },
     {
@@ -291,7 +291,7 @@
       "Page": 467
     },
     {
-      "Name": "Battle Under Farthen D\u00FBr",
+      "Name": "Battle Under Farthen Dûr",
       "Page": 479
     },
     {
@@ -307,7 +307,7 @@
     {
       "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
       "Page": 20.5,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -317,15 +317,15 @@
       "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
       "Page": 22.6,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
     {
       "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
       "Page": 35,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -335,15 +335,15 @@
       "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
       "Page": 47,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
     {
       "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
       "Page": 57.8,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -353,15 +353,15 @@
       "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
       "Page": 65,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
     {
       "CharacterId": "03a731f8-5c4d-4291-bca7-cacbd4f19133",
       "Page": 59,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -380,8 +380,8 @@
       "CharacterId": "050fa48c-d442-4456-b19b-3342374028af",
       "Page": 31.3,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
@@ -389,8 +389,8 @@
       "CharacterId": "0cc03bad-9610-4bc0-b31e-ee91a842088f",
       "Page": 13,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
@@ -398,8 +398,8 @@
       "CharacterId": "0cc03bad-9610-4bc0-b31e-ee91a842088f",
       "Page": 65,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
@@ -416,15 +416,15 @@
       "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
       "Page": 10,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
     {
       "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
       "Page": 16.5,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -434,15 +434,15 @@
       "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
       "Page": 22.6,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
     {
       "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
       "Page": 35,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -452,15 +452,15 @@
       "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
       "Page": 47,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
     {
       "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
       "Page": 57.8,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -470,15 +470,15 @@
       "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
       "Page": 65,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
     {
       "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
       "Page": 70.45,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -496,7 +496,7 @@
     {
       "CharacterId": "6cecbe50-39dc-4ff2-b1e5-8535f7e36bb9",
       "Page": 37,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -506,15 +506,15 @@
       "CharacterId": "8d5c05f8-2447-4757-8450-1dcc0c03e9d9",
       "Page": 27.5,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
     {
       "CharacterId": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
       "Page": 17,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -524,15 +524,15 @@
       "CharacterId": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
       "Page": 22.6,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
     {
       "CharacterId": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
       "Page": 35,
-      "Location": "The Farm (Eragon\u0027s Home)",
+      "Location": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64,
       "Note": "",
@@ -542,8 +542,8 @@
       "CharacterId": "e523c219-392c-4069-bbed-892ac7b43c37",
       "Page": 13,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
@@ -551,8 +551,8 @@
       "CharacterId": "e820ba70-8743-4800-b112-66ee97d5f68c",
       "Page": 11,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     },
@@ -560,8 +560,8 @@
       "CharacterId": "ea40d60f-b9b2-4def-86ec-a147449763a7",
       "Page": 65,
       "Location": "Carvahall",
-      "X": 24.56,
-      "Y": 12.91,
+      "X": 24.54,
+      "Y": 12.66,
       "Note": "",
       "IsInvisible": false
     }
@@ -581,7 +581,7 @@
     },
     {
       "Id": "72066735-eee6-4efd-b6b6-e63837ec1444",
-      "Name": "The Farm (Eragon\u0027s Home)",
+      "Name": "The Farm (Eragon's Home)",
       "X": 22.84,
       "Y": 13.64
     }

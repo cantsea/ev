@@ -4,6 +4,7 @@
 @using ev.Models
 @using System.Text.Json
 @using System.Text.Json.Serialization
+@implements IAsyncDisposable
 
 <MudText Typo="Typo.h5" Class="mb-4">Editor</MudText>
 
@@ -80,7 +81,7 @@ else
                              Variant="Variant.Outlined" Class="mb-2" Min="0.1" />
             <MudButton Variant="Variant.Filled" Color="Color.Secondary"
                        FullWidth="true" OnClick="AddChapter"
-                       Disabled="@(string.IsNullOrWhiteSpace(_newChapterName) || _newChapterPage <= 0)">
+                       Disabled="@(!CanAddChapter)">
                 Add Chapter
             </MudButton>
 
@@ -184,9 +185,9 @@ else
             }
 
             <MudButton Variant="Variant.Filled" Color="Color.Success"
-                       FullWidth="true" OnClick="AddEntry"
-                       Disabled="@(!CanAddEntry)">
-                Add Entry
+                       FullWidth="true" OnClick="SaveEntry"
+                       Disabled="@(!CanSaveEntry)">
+                @(_selectedEntry == null ? "Add Entry" : "Update Entry")
             </MudButton>
 
             @if (_selectedEntry != null)
@@ -204,6 +205,11 @@ else
                         <MudChip T="string" Size="Size.Small" Color="Color.Default">invisible</MudChip>
                     }
                 </MudText>
+                <MudButton Variant="Variant.Text" Color="Color.Default"
+                           FullWidth="true" Class="mt-1"
+                           OnClick="CancelEntryEdit">
+                    Cancel Editing
+                </MudButton>
             }
 
         </MudPaper>
@@ -216,9 +222,9 @@ else
                     @(_placingPreset ? "🟡 Preset mode — click to place preset pin" : "Scroll to zoom · Drag to pan · Click to place pin")
                 </MudText>
                 <MudSpacer />
-                <MudIconButton Icon="@Icons.Material.Filled.ZoomIn" Size="Size.Small" OnClick="ZoomIn" />
-                <MudIconButton Icon="@Icons.Material.Filled.ZoomOut" Size="Size.Small" OnClick="ZoomOut" />
-                <MudIconButton Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" OnClick="ResetZoom" />
+                <MudIconButton Icon="@Icons.Material.Filled.ZoomIn" Size="Size.Small" aria-label="Zoom in" OnClick="ZoomIn" />
+                <MudIconButton Icon="@Icons.Material.Filled.ZoomOut" Size="Size.Small" aria-label="Zoom out" OnClick="ZoomOut" />
+                <MudIconButton Icon="@Icons.Material.Filled.CenterFocusStrong" Size="Size.Small" aria-label="Reset zoom" OnClick="ResetZoom" />
             </MudStack>
 
             <div id="editor-map" style="overflow: hidden; width: 100%; touch-action: none;">
@@ -263,13 +269,13 @@ else
                     {
                         var character = _data.Characters.FirstOrDefault(c => c.Id == entry.CharacterId);
                         if (character == null) continue;
-                        if (!entry.IsInvisible && _data.Locations.Any(p => Math.Abs(p.X - entry.X) < 0.01 && Math.Abs(p.Y - entry.Y) < 0.01)) continue;
                         var capturedEntry = entry;
                         var isSelected = _selectedEntry == entry;
                         @if (entry.IsInvisible)
                         {
                             <MudTooltip Text="@($"{character.Name} — {entry.Location} ({FormatEntryPosition(entry)}) [invisible]")">
                                 <MudIconButton Icon="@Icons.Material.Filled.RadioButtonUnchecked"
+                                               aria-label="@($"Edit {character.Name} at {entry.Location}")"
                                                Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:{character.Color}; opacity:{(isSelected ? "1.0" : "0.5")};")"
                                                OnClick="@((e) => SelectEntry(capturedEntry))" />
                             </MudTooltip>
@@ -278,6 +284,7 @@ else
                         {
                             <MudTooltip Text="@($"{character.Name} — {entry.Location} ({FormatEntryPosition(entry)})")">
                                 <MudIconButton Icon="@Icons.Material.Filled.Place"
+                                               aria-label="@($"Edit {character.Name} at {entry.Location}")"
                                                Style="@($"position:absolute; left:{entry.X:F2}%; top:{entry.Y:F2}%; transform:translate(-50%,-100%); padding:0; color:{character.Color}; opacity:{(isSelected ? "1.0" : "0.75")};")"
                                                OnClick="@((e) => SelectEntry(capturedEntry))" />
                             </MudTooltip>
@@ -291,6 +298,7 @@ else
                         var tooltipText = isMoving ? $"✋ Moving: {preset.Name}" : $"📍 {preset.Name} (click to move)";
                         <MudTooltip Text="@tooltipText">
                             <MudIconButton Icon="@(isMoving? Icons.Material.Filled.Circle : Icons.Material.Outlined.Circle)"
+                                           aria-label="@($"Move location: {preset.Name}")"
                                            Style="@($"position:absolute; left:{preset.X:F2}%; top:{preset.Y:F2}%; transform:translate(-50%,-50%); padding:0; color:{(isMoving ? "#f97316" : "#f59e0b")}; opacity:{(isMoving ? "1.0" : "0.8")}; filter:{(isMoving ? "drop-shadow(0 0 4px white)" : "none")};")"
                                            OnClick="@((e) => SelectPresetForMove(capturedPreset))" />
                         </MudTooltip>
@@ -321,8 +329,8 @@ else
             <HeaderContent>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Type)">Type</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Name</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X ?? double.MaxValue)">X</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y ?? double.MaxValue)">Y</MudTableSortLabel></MudTh>
                 <MudTh>Color</MudTh>
                 <MudTh></MudTh>
             </HeaderContent>
@@ -355,6 +363,7 @@ else
                 </MudTd>
                 <MudTd>
                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   aria-label="@($"Delete {context.Type.ToLowerInvariant()}: {context.Label}")"
                                    Size="Size.Small" Color="Color.Error"
                                    OnClick="() => DeleteRow(context)" />
                 </MudTd>
@@ -376,8 +385,8 @@ else
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Character)">Character</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Page)" InitialDirection="SortDirection.Ascending">Page</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Label)">Location / Chapter</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X)">X</MudTableSortLabel></MudTh>
-                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y)">Y</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.X ?? double.MaxValue)">X</MudTableSortLabel></MudTh>
+                <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Y ?? double.MaxValue)">Y</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Note)">Note</MudTableSortLabel></MudTh>
                 <MudTh><MudTableSortLabel SortBy="new Func<TableRow, object>(r => r.Invisible)">Invisible</MudTableSortLabel></MudTh>
                 <MudTh></MudTh>
@@ -401,7 +410,15 @@ else
                 <MudTd>@context.Note</MudTd>
                 <MudTd>@(context.Invisible ? "✓" : "")</MudTd>
                 <MudTd>
+                    @if (context.Source is MapEntry editableEntry)
+                    {
+                        <MudIconButton Icon="@Icons.Material.Filled.Edit"
+                                       aria-label="@($"Edit entry: {context.Label}")"
+                                       Size="Size.Small" Color="Color.Primary"
+                                       OnClick="() => BeginEditEntry(editableEntry)" />
+                    }
                     <MudIconButton Icon="@Icons.Material.Filled.Delete"
+                                   aria-label="@($"Delete {context.Type.ToLowerInvariant()}: {context.Label}")"
                                    Size="Size.Small" Color="Color.Error"
                                    OnClick="() => DeleteRow(context)" />
                 </MudTd>
@@ -485,14 +502,20 @@ else
             .Where(e => !_data.Chapters.Any() || IsEnd || e.Page < SelectedChapter!.Page)
             .ToList();
 
-    private bool CanAddEntry =>
+    private bool CanAddChapter =>
+        !string.IsNullOrWhiteSpace(_newChapterName) &&
+        _newChapterPage > 0 &&
+        !_data.Chapters.Any(c => c.Page == _newChapterPage);
+
+    private bool CanSaveEntry =>
         _data.TotalPages > 0 &&
         _formPage > 0 &&
         _formPage <= _data.TotalPages &&
         !string.IsNullOrWhiteSpace(_formCharacterId) &&
         !string.IsNullOrWhiteSpace(_formLocation) &&
         _pendingX.HasValue &&
-        !_data.Entries.Any(e => e.CharacterId == _formCharacterId &&
+        !_data.Entries.Any(e => e != _selectedEntry &&
+                                e.CharacterId == _formCharacterId &&
                                 e.Page == _formPage);
 
     private bool CanAddPreset =>
@@ -547,6 +570,7 @@ else
         _placingPreset = false;
         _movingPreset = null;
         _selectedPresetId = "";
+        _formCharacterId = "";
         _formPage = 1;
         await LoadData();
     }
@@ -581,7 +605,7 @@ else
         if (row.Source is MapEntry entry)
         {
             _data.Entries.Remove(entry);
-            if (_selectedEntry == entry) _selectedEntry = null;
+            if (_selectedEntry == entry) ResetEntryForm();
         }
         else if (row.Source is ChapterModel chapter)
         {
@@ -634,10 +658,10 @@ else
         await JS.InvokeVoidAsync("mapHelper.resetZoom", "editor-map");
 
     private async Task ZoomIn() =>
-        await JS.InvokeVoidAsync("eval", "mapHelper.panzoomInstances['editor-map']?.instance.zoomIn()");
+        await JS.InvokeVoidAsync("mapHelper.zoomIn", "editor-map");
 
     private async Task ZoomOut() =>
-        await JS.InvokeVoidAsync("eval", "mapHelper.panzoomInstances['editor-map']?.instance.zoomOut()");
+        await JS.InvokeVoidAsync("mapHelper.zoomOut", "editor-map");
 
     private async Task HandleMouseMove(MouseEventArgs e)
     {
@@ -699,7 +723,7 @@ else
 
     private void AddChapter()
     {
-        if (string.IsNullOrWhiteSpace(_newChapterName)) return;
+        if (!CanAddChapter) return;
         _data.Chapters.Add(new ChapterModel
         {
             Name = _newChapterName.Trim(),
@@ -729,29 +753,30 @@ else
         RefreshJson();
     }
 
-    private void AddEntry()
+    private void SaveEntry()
     {
-        if (!CanAddEntry) return;
-        _data.Entries.Add(new MapEntry
+        if (!CanSaveEntry) return;
+
+        var entry = _selectedEntry;
+        if (entry == null)
         {
-            CharacterId = _formCharacterId,
-            Page = _formPage,
-            Location = _formLocation.Trim(),
-            X = Math.Round(_pendingX!.Value, 2),
-            Y = Math.Round(_pendingY!.Value, 2),
-            Note = _formNote.Trim(),
-            IsInvisible = _formIsInvisible
-        });
+            entry = new MapEntry();
+            _data.Entries.Add(entry);
+        }
+
+        entry.CharacterId = _formCharacterId;
+        entry.Page = _formPage;
+        entry.Location = _formLocation.Trim();
+        entry.X = Math.Round(_pendingX!.Value, 2);
+        entry.Y = Math.Round(_pendingY!.Value, 2);
+        entry.Note = _formNote.Trim();
+        entry.IsInvisible = _formIsInvisible;
+
         _data.Entries = _data.Entries
             .OrderBy(e => e.CharacterId)
             .ThenBy(e => e.Page)
             .ToList();
-        _pendingX = null;
-        _pendingY = null;
-        _formLocation = "";
-        _formNote = "";
-        _formIsInvisible = false;
-        _selectedPresetId = "";
+        ResetEntryForm();
         RefreshJson();
     }
 
@@ -759,22 +784,48 @@ else
     {
         if (_selectedEntry == null) return;
         _data.Entries.Remove(_selectedEntry);
-        _selectedEntry = null;
+        ResetEntryForm();
         RefreshJson();
         StateHasChanged();
     }
 
     private void SelectEntry(MapEntry entry)
     {
-        _selectedEntry = _selectedEntry == entry ? null : entry;
-        if (_selectedEntry != null)
-        {
-            _formCharacterId = entry.CharacterId;
-            _formPage = entry.Page;
-            _formLocation = entry.Location;
-            _formNote = entry.Note;
-            _formIsInvisible = entry.IsInvisible;
-        }
+        if (_selectedEntry == entry)
+            CancelEntryEdit();
+        else
+            BeginEditEntry(entry);
+    }
+
+    private void BeginEditEntry(MapEntry entry)
+    {
+        _selectedEntry = entry;
+        _formCharacterId = entry.CharacterId;
+        _formPage = entry.Page;
+        _formLocation = entry.Location;
+        _formNote = entry.Note;
+        _formIsInvisible = entry.IsInvisible;
+        _pendingX = entry.X;
+        _pendingY = entry.Y;
+        _selectedPresetId = _data.Locations
+            .FirstOrDefault(p => string.Equals(p.Name, entry.Location, StringComparison.OrdinalIgnoreCase))?.Id ?? "";
+    }
+
+    private void CancelEntryEdit()
+    {
+        ResetEntryForm();
+        StateHasChanged();
+    }
+
+    private void ResetEntryForm()
+    {
+        _selectedEntry = null;
+        _pendingX = null;
+        _pendingY = null;
+        _formLocation = "";
+        _formNote = "";
+        _formIsInvisible = false;
+        _selectedPresetId = "";
     }
 
     private void RefreshJson()
@@ -794,6 +845,11 @@ else
     private static string FormatEntryPosition(MapEntry entry)
     {
         return $"p.{entry.Page:g}";
+    }
+
+    public async ValueTask DisposeAsync()
+    {
+        await JS.InvokeVoidAsync("mapHelper.destroyPanzoom", "editor-map");
     }
 
     private record ClickResult(double X, double Y);

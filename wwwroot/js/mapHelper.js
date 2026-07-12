@@ -3,20 +3,28 @@
     initPanzoom: function (wrapperId, elementId) {
         const el = document.getElementById(elementId);
         if (!el) return;
-        if (window.mapHelper.panzoomInstances[wrapperId]) {
-            window.mapHelper.panzoomInstances[wrapperId].instance.destroy();
-        }
+        window.mapHelper.destroyPanzoom(wrapperId);
         const instance = Panzoom(el, {
             maxScale: 8,
             minScale: 1,
             contain: 'outside',
             cursor: 'grab'
         });
-        el.parentElement.addEventListener('wheel', instance.zoomWithWheel);
-        el.addEventListener('panzoomzoom', (e) => {
+        const wheelHandler = instance.zoomWithWheel;
+        const zoomHandler = (e) => {
             el.style.setProperty('--marker-scale', 1 / e.detail.scale);
-        });
-        window.mapHelper.panzoomInstances[wrapperId] = { instance, el };
+        };
+        el.parentElement?.addEventListener('wheel', wheelHandler);
+        el.addEventListener('panzoomzoom', zoomHandler);
+        window.mapHelper.panzoomInstances[wrapperId] = { instance, el, wheelHandler, zoomHandler };
+    },
+    destroyPanzoom: function (wrapperId) {
+        const entry = window.mapHelper.panzoomInstances[wrapperId];
+        if (!entry) return;
+        entry.el.parentElement?.removeEventListener('wheel', entry.wheelHandler);
+        entry.el.removeEventListener('panzoomzoom', entry.zoomHandler);
+        entry.instance.destroy();
+        delete window.mapHelper.panzoomInstances[wrapperId];
     },
     resetZoom: function (wrapperId) {
         const entry = window.mapHelper.panzoomInstances[wrapperId];
