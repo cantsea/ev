@@ -1,1435 +1,589 @@
-{
+﻿{
   "TotalPages": 498,
   "Characters": [
     {
-      "Id": "character-eragon",
+      "Id": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
       "Name": "Eragon",
-      "Color": "#2563eb"
+      "Color": "#80b7ff"
     },
     {
-      "Id": "character-saphira",
-      "Name": "Saphira",
-      "Color": "#7c3aed"
-    },
-    {
-      "Id": "character-brom",
-      "Name": "Brom",
-      "Color": "#dc2626"
-    },
-    {
-      "Id": "character-murtagh",
-      "Name": "Murtagh",
-      "Color": "#059669"
-    },
-    {
-      "Id": "character-roran",
-      "Name": "Roran",
-      "Color": "#d97706"
-    },
-    {
-      "Id": "character-garrow",
-      "Name": "Garrow",
-      "Color": "#0891b2"
-    },
-    {
-      "Id": "character-arya",
-      "Name": "Arya",
-      "Color": "#db2777"
-    },
-    {
-      "Id": "character-orik",
-      "Name": "Orik",
-      "Color": "#4f46e5"
-    },
-    {
-      "Id": "character-jeod",
-      "Name": "Jeod",
-      "Color": "#65a30d"
-    },
-    {
-      "Id": "character-angela",
-      "Name": "Angela",
-      "Color": "#9333ea"
-    },
-    {
-      "Id": "character-solembum",
-      "Name": "Solembum",
-      "Color": "#ea580c"
-    },
-    {
-      "Id": "character-ajihad",
-      "Name": "Ajihad",
-      "Color": "#0f766e"
-    },
-    {
-      "Id": "character-hrothgar",
-      "Name": "Hrothgar",
-      "Color": "#1d4ed8"
-    },
-    {
-      "Id": "character-sloan",
+      "Id": "e820ba70-8743-4800-b112-66ee97d5f68c",
       "Name": "Sloan",
-      "Color": "#b91c1c"
+      "Color": "#000000"
     },
     {
-      "Id": "character-gertrude",
-      "Name": "Gertrude",
-      "Color": "#0369a1"
+      "Id": "0cc03bad-9610-4bc0-b31e-ee91a842088f",
+      "Name": "Horst",
+      "Color": "#000000"
+    },
+    {
+      "Id": "e523c219-392c-4069-bbed-892ac7b43c37",
+      "Name": "Katrina",
+      "Color": "#feac39"
+    },
+    {
+      "Id": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
+      "Name": "Garrow",
+      "Color": "#77613c"
+    },
+    {
+      "Id": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Name": "Roran",
+      "Color": "#ffa200"
+    },
+    {
+      "Id": "8d5c05f8-2447-4757-8450-1dcc0c03e9d9",
+      "Name": "Morn",
+      "Color": "#000000"
+    },
+    {
+      "Id": "050fa48c-d442-4456-b19b-3342374028af",
+      "Name": "Brom",
+      "Color": "#5d3804"
+    },
+    {
+      "Id": "6cecbe50-39dc-4ff2-b1e5-8535f7e36bb9",
+      "Name": "Dragon",
+      "Color": "#0062ff"
+    },
+    {
+      "Id": "03a731f8-5c4d-4291-bca7-cacbd4f19133",
+      "Name": "Saphira",
+      "Color": "#3b82f6"
+    },
+    {
+      "Id": "ea40d60f-b9b2-4def-86ec-a147449763a7",
+      "Name": "Baldor",
+      "Color": "#000000"
     }
   ],
   "Chapters": [
     {
-      "Index": 1,
       "Name": "Prologue: Shade of Fear",
       "Page": 1
     },
     {
-      "Index": 2,
       "Name": "Discovery",
       "Page": 6
     },
     {
-      "Index": 3,
       "Name": "Palancar Valley",
       "Page": 9
     },
     {
-      "Index": 4,
       "Name": "Dragon Tales",
       "Page": 19
     },
     {
-      "Index": 5,
       "Name": "Fate\u0027s Gift",
       "Page": 35
     },
     {
-      "Index": 6,
       "Name": "Awakening",
       "Page": 38
     },
     {
-      "Index": 7,
       "Name": "Tea for Two",
       "Page": 47
     },
     {
-      "Index": 8,
       "Name": "A Name of Power",
       "Page": 56
     },
     {
-      "Index": 9,
       "Name": "A Miller-to-Be",
       "Page": 60
     },
     {
-      "Index": 10,
       "Name": "Strangers in Carvahall",
       "Page": 60
     },
     {
-      "Index": 11,
       "Name": "Flight of Destiny",
       "Page": 70
     },
     {
-      "Index": 12,
       "Name": "The Doom of Innocence",
       "Page": 75
     },
     {
-      "Index": 13,
       "Name": "Deathwatch",
       "Page": 81
     },
     {
-      "Index": 14,
       "Name": "The Madness of Life",
       "Page": 90
     },
     {
-      "Index": 15,
-      "Name": "A Rider\u0027s Blade",
+      "Name": "A Rider\\\u0027s Blade",
       "Page": 92
     },
     {
-      "Index": 16,
       "Name": "Saddlemaking",
       "Page": 107
     },
     {
-      "Index": 17,
       "Name": "Therinsford",
       "Page": 111
     },
     {
-      "Index": 18,
       "Name": "Thunder Roar and Lightning Crackle",
       "Page": 123
     },
     {
-      "Index": 19,
       "Name": "Revelation at Yazuac",
       "Page": 129
     },
     {
-      "Index": 20,
       "Name": "Admonishments",
       "Page": 135
     },
     {
-      "Index": 21,
       "Name": "Magic Is the Simplest Thing",
       "Page": 143
     },
     {
-      "Index": 22,
       "Name": "Daret",
       "Page": 152
     },
     {
-      "Index": 23,
       "Name": "Through a Dragon\u0027s Eye",
       "Page": 161
     },
     {
-      "Index": 24,
       "Name": "A Song for the Road",
       "Page": 169
     },
     {
-      "Index": 25,
       "Name": "A Taste of Teirm",
       "Page": 173
     },
     {
-      "Index": 26,
       "Name": "An Old Friend",
       "Page": 179
     },
     {
-      "Index": 27,
       "Name": "The Witch and the Werecat",
       "Page": 198
     },
     {
-      "Index": 28,
       "Name": "Of Reading and Plots",
       "Page": 210
     },
     {
-      "Index": 29,
       "Name": "Thieves in the Castle",
       "Page": 213
     },
     {
-      "Index": 30,
       "Name": "A Costly Mistake",
       "Page": 221
     },
     {
-      "Index": 31,
       "Name": "Vision of Perfection",
       "Page": 234
     },
     {
-      "Index": 32,
       "Name": "Master of the Blade",
       "Page": 240
     },
     {
-      "Index": 33,
       "Name": "The Mire of Dras-Leona",
       "Page": 246
     },
     {
-      "Index": 34,
       "Name": "Trail of Oil",
       "Page": 250
     },
     {
-      "Index": 35,
       "Name": "Worshipers of Helgrind",
       "Page": 255
     },
     {
-      "Index": 36,
       "Name": "The Ra\u0027zac\u0027s Revenge",
       "Page": 264
     },
     {
-      "Index": 37,
       "Name": "Murtagh",
       "Page": 267
     },
     {
-      "Index": 38,
       "Name": "Legacy of a Rider",
       "Page": 273
     },
     {
-      "Index": 39,
       "Name": "Diamond Tomb",
       "Page": 278
     },
     {
-      "Index": 40,
       "Name": "Capture at Gil\u0027ead",
       "Page": 285
     },
     {
-      "Index": 41,
       "Name": "Du Sundavar Freohr",
       "Page": 293
     },
     {
-      "Index": 42,
       "Name": "Fighting Shadows",
       "Page": 300
     },
     {
-      "Index": 43,
       "Name": "A Warrior and a Healer",
       "Page": 310
     },
     {
-      "Index": 44,
       "Name": "Water from Sand",
       "Page": 317
     },
     {
-      "Index": 45,
       "Name": "The Ramr River",
       "Page": 324
     },
     {
-      "Index": 46,
       "Name": "The Hadarac Desert",
       "Page": 331
     },
     {
-      "Index": 47,
       "Name": "A Path Revealed",
       "Page": 337
     },
     {
-      "Index": 48,
       "Name": "A Clash of Wills",
       "Page": 347
     },
     {
-      "Index": 49,
       "Name": "Flight Through the Valley",
       "Page": 354
     },
     {
-      "Index": 50,
       "Name": "The Horns of a Dilemma",
       "Page": 369
     },
     {
-      "Index": 51,
       "Name": "Hunting for Answers",
       "Page": 379
     },
     {
-      "Index": 52,
       "Name": "The Glory of Tronjheim",
       "Page": 393
     },
     {
-      "Index": 53,
       "Name": "Ajihad",
       "Page": 402
     },
     {
-      "Index": 54,
       "Name": "Bless the Child, Argetlam",
       "Page": 420
     },
     {
-      "Index": 55,
       "Name": "Mandrake Root and Newt\u0027s Tongue",
       "Page": 433
     },
     {
-      "Index": 56,
       "Name": "Hall of the Mountain King",
       "Page": 439
     },
     {
-      "Index": 57,
       "Name": "Arya\u0027s Test",
       "Page": 453
     },
     {
-      "Index": 58,
       "Name": "The Shadows Lengthen",
       "Page": 467
     },
     {
-      "Index": 59,
       "Name": "Battle Under Farthen D\u00FBr",
       "Page": 479
     },
     {
-      "Index": 60,
       "Name": "The Mourning Sage",
       "Page": 492
     },
     {
-      "Index": 61,
       "Name": "End of Eragon",
-      "Page": 498
+      "Page": 499
     }
   ],
   "Entries": [
     {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 2,
-      "Sequence": 1,
-      "Location": "The Spine",
-      "X": 16.5,
-      "Y": 23,
-      "Note": "Eragon tracks the deer to a glen.",
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 20.5,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 3,
-      "Sequence": 1,
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 22.6,
       "Location": "Carvahall",
-      "X": 26,
-      "Y": 13,
-      "Note": "Eragon starts down the trail towards Carvahall.",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-sloan",
-      "ChapterIndex": 3,
-      "Sequence": 1,
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 35,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 47,
       "Location": "Carvahall",
-      "X": 26,
-      "Y": 13,
-      "Note": "Eragon visits the butcher\u2019s shop and meets Sloan.",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-garrow",
-      "ChapterIndex": 4,
-      "Sequence": 1,
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 57.8,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03735082-5d51-4ffa-a459-5dd1cf615932",
+      "Page": 65,
       "Location": "Carvahall",
-      "X": 26,
-      "Y": 13,
-      "Note": "They pack the wagon and head to Carvahall.",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-roran",
-      "ChapterIndex": 4,
-      "Sequence": 1,
+      "CharacterId": "03a731f8-5c4d-4291-bca7-cacbd4f19133",
+      "Page": 59,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "03a731f8-5c4d-4291-bca7-cacbd4f19133",
+      "Page": 76,
+      "Location": "Spine - Stone Clearing",
+      "X": 24.55,
+      "Y": 9.8,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "050fa48c-d442-4456-b19b-3342374028af",
+      "Page": 31.3,
       "Location": "Carvahall",
-      "X": 26,
-      "Y": 13,
-      "Note": "They pack the wagon and head to Carvahall.",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 10,
-      "Sequence": 1,
+      "CharacterId": "0cc03bad-9610-4bc0-b31e-ee91a842088f",
+      "Page": 13,
       "Location": "Carvahall",
-      "X": 26,
-      "Y": 13,
-      "Note": "Eragon and Brom walk to the road.",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 11,
-      "Sequence": 1,
-      "Location": "The Spine",
-      "X": 16.5,
-      "Y": 23,
-      "Note": "Eragon and Saphira take off and fly towards the Spine.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 11,
-      "Sequence": 1,
-      "Location": "The Spine",
-      "X": 16.5,
-      "Y": 23,
-      "Note": "Eragon and Saphira take off and fly towards the Spine.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 11,
-      "Sequence": 2,
-      "Location": "Anora River",
-      "X": 28.5,
-      "Y": 15.5,
-      "Note": "Eragon and Saphira fly over the farm and the Anora River.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 11,
-      "Sequence": 2,
-      "Location": "Anora River",
-      "X": 28.5,
-      "Y": 15.5,
-      "Note": "Eragon and Saphira fly over the farm and the Anora River.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 12,
-      "Sequence": 1,
-      "Location": "Palancar Valley",
-      "X": 25,
-      "Y": 15,
-      "Note": "Eragon and Saphira fly towards Palancar Valley.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 12,
-      "Sequence": 1,
-      "Location": "Palancar Valley",
-      "X": 25,
-      "Y": 15,
-      "Note": "Eragon and Saphira fly towards Palancar Valley.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 12,
-      "Sequence": 2,
+      "CharacterId": "0cc03bad-9610-4bc0-b31e-ee91a842088f",
+      "Page": 65,
       "Location": "Carvahall",
-      "X": 26,
-      "Y": 13,
-      "Note": "Saphira struggles with the extra weight but manages to fly towards Carvahall.",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 12,
-      "Sequence": 2,
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 7,
+      "Location": "Spine - Stone Clearing",
+      "X": 24.55,
+      "Y": 9.8,
+      "Note": "This is a rough estimate.",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 10,
       "Location": "Carvahall",
-      "X": 26,
-      "Y": 13,
-      "Note": "Saphira struggles with the extra weight but manages to fly towards Carvahall.",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-gertrude",
-      "ChapterIndex": 13,
-      "Sequence": 1,
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 16.5,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
+      "IsInvisible": false
+    },
+    {
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 22.6,
       "Location": "Carvahall",
-      "X": 26,
-      "Y": 13,
-      "Note": "Eragon and Gertrude go to Horst\u0027s house.",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 17,
-      "Sequence": 1,
-      "Location": "Therinsford",
-      "X": 21,
-      "Y": 10.5,
-      "Note": "Brom and Eragon set up camp near Therinsford.",
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 35,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 17,
-      "Sequence": 1,
-      "Location": "Therinsford",
-      "X": 21,
-      "Y": 10.5,
-      "Note": "Brom and Eragon set up camp near Therinsford.",
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 47,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 17,
-      "Sequence": 1,
-      "Location": "Therinsford",
-      "X": 21,
-      "Y": 10.5,
-      "Note": "Brom and Eragon set up camp near Therinsford.",
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 57.8,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 17,
-      "Sequence": 2,
-      "Location": "Anora River",
-      "X": 28.5,
-      "Y": 15.5,
-      "Note": "Brom and Eragon set up camp by the Anora River.",
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 65,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 17,
-      "Sequence": 2,
-      "Location": "Anora River",
-      "X": 28.5,
-      "Y": 15.5,
-      "Note": "Brom and Eragon set up camp by the Anora River.",
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 70.45,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 18,
-      "Sequence": 1,
-      "Location": "Yazuac",
-      "X": 26,
-      "Y": 22.5,
-      "Note": "They fill waterskins and start towards Yazuac.",
+      "CharacterId": "6cae05fa-d50d-43c2-b78c-e99b8f10d747",
+      "Page": 76,
+      "Location": "Spine - Stone Clearing",
+      "X": 24.55,
+      "Y": 9.8,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 18,
-      "Sequence": 1,
-      "Location": "Yazuac",
-      "X": 26,
-      "Y": 22.5,
-      "Note": "They fill waterskins and start towards Yazuac.",
+      "CharacterId": "6cecbe50-39dc-4ff2-b1e5-8535f7e36bb9",
+      "Page": 37,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 18,
-      "Sequence": 1,
-      "Location": "Yazuac",
-      "X": 26,
-      "Y": 22.5,
-      "Note": "They fill waterskins and start towards Yazuac.",
+      "CharacterId": "8d5c05f8-2447-4757-8450-1dcc0c03e9d9",
+      "Page": 27.5,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 19,
-      "Sequence": 1,
-      "Location": "Ninor River",
-      "X": 27.8,
-      "Y": 25,
-      "Note": "Saphira flies away to hide.",
+      "CharacterId": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
+      "Page": 17,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 19,
-      "Sequence": 1,
-      "Location": "Ninor River",
-      "X": 27.8,
-      "Y": 25,
-      "Note": "Saphira flies away to hide.",
+      "CharacterId": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
+      "Page": 22.6,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 19,
-      "Sequence": 2,
-      "Location": "Yazuac",
-      "X": 26,
-      "Y": 22.5,
-      "Note": "Eragon and Brom approach Yazuac and notice the abnormal silence.",
+      "CharacterId": "d122ce8c-dcff-4712-afaa-877f09cc5b1c",
+      "Page": 35,
+      "Location": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 19,
-      "Sequence": 2,
-      "Location": "Yazuac",
-      "X": 26,
-      "Y": 22.5,
-      "Note": "Eragon and Brom approach Yazuac and notice the abnormal silence.",
+      "CharacterId": "e523c219-392c-4069-bbed-892ac7b43c37",
+      "Page": 13,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 20,
-      "Sequence": 1,
-      "Location": "Ninor River",
-      "X": 27.8,
-      "Y": 25,
-      "Note": "Eragon ties Snowfire behind Cadoc and leaves Yazuac, following the trail southward along the Ninor River.",
+      "CharacterId": "e820ba70-8743-4800-b112-66ee97d5f68c",
+      "Page": 11,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     },
     {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 20,
-      "Sequence": 1,
-      "Location": "Ninor River",
-      "X": 27.8,
-      "Y": 25,
-      "Note": "Saphira finds a secluded clearing by the river where they make camp.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 20,
-      "Sequence": 1,
-      "Location": "Ninor River",
-      "X": 27.8,
-      "Y": 25,
-      "Note": "Saphira finds a secluded clearing by the river where they make camp.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 22,
-      "Sequence": 1,
-      "Location": "Daret",
-      "X": 24.8,
-      "Y": 27,
-      "Note": "Eragon and Brom approach Daret with caution.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 22,
-      "Sequence": 1,
-      "Location": "Daret",
-      "X": 24.8,
-      "Y": 27,
-      "Note": "Eragon and Brom approach Daret with caution.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 22,
-      "Sequence": 2,
-      "Location": "Ninor River",
-      "X": 27.8,
-      "Y": 25,
-      "Note": "Brom and Eragon discuss the state of the Empire.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 22,
-      "Sequence": 2,
-      "Location": "Ninor River",
-      "X": 27.8,
-      "Y": 25,
-      "Note": "Brom and Eragon discuss the state of the Empire.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 24,
-      "Sequence": 1,
-      "Location": "The Spine",
-      "X": 16.5,
-      "Y": 23,
-      "Note": "Eragon and Brom follow the Spine south.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 24,
-      "Sequence": 1,
-      "Location": "The Spine",
-      "X": 16.5,
-      "Y": 23,
-      "Note": "Eragon and Brom follow the Spine south.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 25,
-      "Sequence": 1,
-      "Location": "Teirm",
-      "X": 15.2,
-      "Y": 37,
-      "Note": "Saphira sights Teirm after traveling north toward the ocean.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 25,
-      "Sequence": 1,
-      "Location": "Teirm",
-      "X": 15.2,
-      "Y": 37,
-      "Note": "Eragon and Brom approach the southern gate of Teirm.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 25,
-      "Sequence": 1,
-      "Location": "Teirm",
-      "X": 15.2,
-      "Y": 37,
-      "Note": "Eragon and Brom approach the southern gate of Teirm.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-jeod",
-      "ChapterIndex": 26,
-      "Sequence": 1,
-      "Location": "Teirm",
-      "X": 15.2,
-      "Y": 37,
-      "Note": "Jeod comes out of the house and is shocked to see Brom.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 32,
-      "Sequence": 1,
-      "Location": "The Spine",
-      "X": 16.5,
-      "Y": 23,
-      "Note": "They cross the Spine and come to the plains.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 32,
-      "Sequence": 1,
-      "Location": "The Spine",
-      "X": 16.5,
-      "Y": 23,
-      "Note": "They cross the Spine and come to the plains.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 32,
-      "Sequence": 2,
-      "Location": "Leona Lake",
-      "X": 20.5,
-      "Y": 58,
-      "Note": "They reach Leona Lake.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 32,
-      "Sequence": 2,
-      "Location": "Leona Lake",
-      "X": 20.5,
-      "Y": 58,
-      "Note": "They reach Leona Lake.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 33,
-      "Sequence": 1,
-      "Location": "Dras-Leona",
-      "X": 24,
-      "Y": 58,
-      "Note": "They continue south along Leona Lake\u0027s shore.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-brom",
-      "ChapterIndex": 33,
-      "Sequence": 1,
-      "Location": "Dras-Leona",
-      "X": 24,
-      "Y": 58,
-      "Note": "They continue south along Leona Lake\u0027s shore.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 35,
-      "Sequence": 1,
-      "Location": "Dras-Leona",
-      "X": 24,
-      "Y": 58,
-      "Note": "Eragon and Brom escape through the city gates with Saphira\u0027s help.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 40,
-      "Sequence": 1,
-      "Location": "Gil\u0027ead",
-      "X": 34,
-      "Y": 31,
-      "Note": "Eragon and Murtagh ride towards Gil\u0027ead.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-murtagh",
-      "ChapterIndex": 40,
-      "Sequence": 1,
-      "Location": "Gil\u0027ead",
-      "X": 34,
-      "Y": 31,
-      "Note": "Eragon and Murtagh ride towards Gil\u0027ead.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 40,
-      "Sequence": 2,
-      "Location": "Ur\u00FB\u0027baen",
-      "X": 34,
-      "Y": 57,
-      "Note": "They skirt the capital Ur\u00FB\u2019baen.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-murtagh",
-      "ChapterIndex": 40,
-      "Sequence": 2,
-      "Location": "Ur\u00FB\u0027baen",
-      "X": 34,
-      "Y": 57,
-      "Note": "They skirt the capital Ur\u00FB\u2019baen.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 40,
-      "Sequence": 3,
-      "Location": "Gil\u0027ead",
-      "X": 34,
-      "Y": 31,
-      "Note": "They camp two miles from Gil\u0027ead.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-murtagh",
-      "ChapterIndex": 40,
-      "Sequence": 3,
-      "Location": "Gil\u0027ead",
-      "X": 34,
-      "Y": 31,
-      "Note": "They camp two miles from Gil\u0027ead.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 45,
-      "Sequence": 1,
-      "Location": "Hadarac Desert",
-      "X": 59,
-      "Y": 42,
-      "Note": "Eragon and Murtagh ride their horses, Saphira flies with the elf.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-murtagh",
-      "ChapterIndex": 45,
-      "Sequence": 1,
-      "Location": "Hadarac Desert",
-      "X": 59,
-      "Y": 42,
-      "Note": "Eragon and Murtagh ride their horses, Saphira flies with the elf.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 45,
-      "Sequence": 1,
-      "Location": "Hadarac Desert",
-      "X": 59,
-      "Y": 42,
-      "Note": "Eragon and Murtagh ride their horses, Saphira flies with the elf.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 45,
-      "Sequence": 2,
-      "Location": "Ramr River",
-      "X": 40,
-      "Y": 43,
-      "Note": "Eragon and Murtagh stop to rest near the Ramr River.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-murtagh",
-      "ChapterIndex": 45,
-      "Sequence": 2,
-      "Location": "Ramr River",
-      "X": 40,
-      "Y": 43,
-      "Note": "Eragon and Murtagh stop to rest near the Ramr River.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 45,
-      "Sequence": 2,
-      "Location": "Ramr River",
-      "X": 40,
-      "Y": 43,
-      "Note": "Saphira flies over the Ramr River to scout.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 45,
-      "Sequence": 3,
-      "Location": "Hadarac Desert",
-      "X": 59,
-      "Y": 42,
-      "Note": "Saphira carries Eragon across the Ramr River.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-murtagh",
-      "ChapterIndex": 45,
-      "Sequence": 3,
-      "Location": "Hadarac Desert",
-      "X": 59,
-      "Y": 42,
-      "Note": "Saphira carries Eragon across the Ramr River.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 45,
-      "Sequence": 3,
-      "Location": "Hadarac Desert",
-      "X": 59,
-      "Y": 42,
-      "Note": "Saphira carries Eragon across the Ramr River.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 46,
-      "Sequence": 1,
-      "Location": "Beor Mountains",
-      "X": 76,
-      "Y": 88,
-      "Note": "The landscape changes as they approach the mountains.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-murtagh",
-      "ChapterIndex": 46,
-      "Sequence": 1,
-      "Location": "Beor Mountains",
-      "X": 76,
-      "Y": 88,
-      "Note": "The landscape changes as they approach the mountains.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 47,
-      "Sequence": 1,
-      "Location": "Beor Mountains",
-      "X": 76,
-      "Y": 88,
-      "Note": "Eragon and Murtagh decide to flee and head east along the Beor Mountains.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 52,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "They reach the end of the tunnel and see Tronjheim.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 52,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "They reach the end of the tunnel and see Tronjheim.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-murtagh",
-      "ChapterIndex": 52,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "They reach the end of the tunnel and see Tronjheim.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-ajihad",
-      "ChapterIndex": 53,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Ajihad orders Murtagh to be taken prisoner.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-orik",
-      "ChapterIndex": 54,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon and Orik enter a main tunnel in Tronjheim.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 54,
-      "Sequence": 1,
-      "Location": "Isidar Mithrim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Saphira lands in the dragonhold on Isidar Mithrim.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-solembum",
-      "ChapterIndex": 55,
-      "Sequence": 1,
-      "Location": "Isidar Mithrim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Solembum invites Eragon to follow him.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 55,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon leaves Angela\u0027s room.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-angela",
-      "ChapterIndex": 55,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon leaves Angela\u0027s room.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-solembum",
-      "ChapterIndex": 55,
-      "Sequence": 2,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Solembum guides Eragon back to the dragonhold.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 57,
-      "Sequence": 1,
-      "Location": "Farthen D\u00FBr",
-      "X": 86,
-      "Y": 89,
-      "Note": "Eragon and Saphira fly inside Farthen D\u00FBr.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 57,
-      "Sequence": 1,
-      "Location": "Farthen D\u00FBr",
-      "X": 86,
-      "Y": 89,
-      "Note": "Eragon and Saphira fly inside Farthen D\u00FBr.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 58,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon and Saphira prepare to leave the cave.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 58,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon and Saphira prepare to leave the cave.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 58,
-      "Sequence": 2,
-      "Location": "Farthen D\u00FBr",
-      "X": 86,
-      "Y": 89,
-      "Note": "Eragon and Saphira exit Tronjheim to find the dwarves they are supposed to help.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 58,
-      "Sequence": 2,
-      "Location": "Farthen D\u00FBr",
-      "X": 86,
-      "Y": 89,
-      "Note": "Eragon and Saphira exit Tronjheim to find the dwarves they are supposed to help.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 58,
-      "Sequence": 3,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon and Saphira join the army assembling at the base of Tronjheim.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 58,
-      "Sequence": 3,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon and Saphira join the army assembling at the base of Tronjheim.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 59,
-      "Sequence": 1,
-      "Location": "Farthen D\u00FBr",
-      "X": 86,
-      "Y": 89,
-      "Note": "Murtagh rescues Eragon.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-murtagh",
-      "ChapterIndex": 59,
-      "Sequence": 1,
-      "Location": "Farthen D\u00FBr",
-      "X": 86,
-      "Y": 89,
-      "Note": "Murtagh rescues Eragon.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 59,
-      "Sequence": 1,
-      "Location": "Farthen D\u00FBr",
-      "X": 86,
-      "Y": 89,
-      "Note": "Eragon helps Saphira and they fly to different parts of the battlefield.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-hrothgar",
-      "ChapterIndex": 59,
-      "Sequence": 1,
-      "Location": "Farthen D\u00FBr",
-      "X": 86,
-      "Y": 89,
-      "Note": "Eragon and Saphira assist Hrothgar.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 59,
-      "Sequence": 2,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon and Arya go to stop Urgals digging into Tronjheim.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-arya",
-      "ChapterIndex": 59,
-      "Sequence": 1,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon and Arya go to stop Urgals digging into Tronjheim.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 59,
-      "Sequence": 3,
-      "Location": "Isidar Mithrim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Saphira is injured and they go to the dragonhold.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 59,
-      "Sequence": 2,
-      "Location": "Isidar Mithrim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Saphira is injured and they go to the dragonhold.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-eragon",
-      "ChapterIndex": 59,
-      "Sequence": 4,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Eragon slides down Vol Turin to reach Tronjheim\u0027s base.",
-      "IsInvisible": false
-    },
-    {
-      "CharacterId": "character-saphira",
-      "ChapterIndex": 59,
-      "Sequence": 3,
-      "Location": "Tronjheim",
-      "X": 86,
-      "Y": 87,
-      "Note": "Saphira and Arya arrive to help Eragon.",
+      "CharacterId": "ea40d60f-b9b2-4def-86ec-a147449763a7",
+      "Page": 65,
+      "Location": "Carvahall",
+      "X": 24.56,
+      "Y": 12.91,
+      "Note": "",
       "IsInvisible": false
     }
   ],
   "Locations": [
     {
-      "Id": "location-anora-river",
-      "Name": "Anora River",
-      "X": 28.5,
-      "Y": 15.5
-    },
-    {
-      "Id": "location-beor-mountains",
-      "Name": "Beor Mountains",
-      "X": 76,
-      "Y": 88
-    },
-    {
-      "Id": "location-carvahall",
+      "Id": "43077ab7-fa43-4b9e-a78a-75f4069334bb",
       "Name": "Carvahall",
-      "X": 26,
-      "Y": 13
+      "X": 24.54,
+      "Y": 12.66
     },
     {
-      "Id": "location-daret",
-      "Name": "Daret",
-      "X": 24.8,
-      "Y": 27
+      "Id": "4656ae42-37e0-4a6a-af5b-356ac573168a",
+      "Name": "Spine - Stone Clearing",
+      "X": 24.55,
+      "Y": 9.8
     },
     {
-      "Id": "location-dras-leona",
-      "Name": "Dras-Leona",
-      "X": 24,
-      "Y": 58
-    },
-    {
-      "Id": "location-farthen-d-r",
-      "Name": "Farthen D\u00FBr",
-      "X": 86,
-      "Y": 89
-    },
-    {
-      "Id": "location-gil-ead",
-      "Name": "Gil\u0027ead",
-      "X": 34,
-      "Y": 31
-    },
-    {
-      "Id": "location-hadarac-desert",
-      "Name": "Hadarac Desert",
-      "X": 59,
-      "Y": 42
-    },
-    {
-      "Id": "location-isidar-mithrim",
-      "Name": "Isidar Mithrim",
-      "X": 86,
-      "Y": 87
-    },
-    {
-      "Id": "location-leona-lake",
-      "Name": "Leona Lake",
-      "X": 20.5,
-      "Y": 58
-    },
-    {
-      "Id": "location-ninor-river",
-      "Name": "Ninor River",
-      "X": 27.8,
-      "Y": 25
-    },
-    {
-      "Id": "location-palancar-valley",
-      "Name": "Palancar Valley",
-      "X": 25,
-      "Y": 15
-    },
-    {
-      "Id": "location-ramr-river",
-      "Name": "Ramr River",
-      "X": 40,
-      "Y": 43
-    },
-    {
-      "Id": "location-teirm",
-      "Name": "Teirm",
-      "X": 15.2,
-      "Y": 37
-    },
-    {
-      "Id": "location-the-spine",
-      "Name": "The Spine",
-      "X": 16.5,
-      "Y": 23
-    },
-    {
-      "Id": "location-therinsford",
-      "Name": "Therinsford",
-      "X": 22.93,
-      "Y": 14.98
-    },
-    {
-      "Id": "location-tronjheim",
-      "Name": "Tronjheim",
-      "X": 86,
-      "Y": 87
-    },
-    {
-      "Id": "location-ur-baen",
-      "Name": "Ur\u00FB\u0027baen",
-      "X": 34,
-      "Y": 57
-    },
-    {
-      "Id": "location-yazuac",
-      "Name": "Yazuac",
-      "X": 26,
-      "Y": 22.5
+      "Id": "72066735-eee6-4efd-b6b6-e63837ec1444",
+      "Name": "The Farm (Eragon\u0027s Home)",
+      "X": 22.84,
+      "Y": 13.64
     }
   ]
 }

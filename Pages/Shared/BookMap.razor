@@ -21,7 +21,7 @@
         <MudPaper Elevation="2" Class="pa-4 mb-2">
         @if (_data.Chapters.Any())
         {
-            var chapters = _data.Chapters.OrderBy(c => c.Index).ToList();
+            var chapters = _data.Chapters.OrderBy(c => c.Page).ToList();
             <MudStack Row="true" AlignItems="AlignItems.Center" Justify="Justify.Center" Class="mb-2">
                 <MudIconButton Icon="@Icons.Material.Filled.SkipPrevious" Size="Size.Small" Color="Color.Primary"
                                OnClick="() => SetChapterIndex(1)"
@@ -86,7 +86,7 @@
                             @foreach (var character in _data.Characters)
                             {
                                 var trail = GetTrail(character.Id);
-                                if (trail.Count < 2) continue;
+                                if (trail.Count < 2 || trail[0].IsInvisible) continue;
                                 for (int i = 0; i < trail.Count - 1; i++)
                                 {
                                     var a = trail[i];
@@ -181,9 +181,9 @@
                 @if (_data.Chapters.Any())
                 {
                     <MudSelect T="int" Value="_chapterIndex" ValueChanged="SetChapterIndex" Variant="Variant.Outlined" Class="mb-4">
-                        @foreach (var chapter in _data.Chapters.OrderBy(c => c.Index))
+                        @foreach (var chapter in _data.Chapters.OrderBy(c => c.Page))
                         {
-                            var index = _data.Chapters.OrderBy(c => c.Index).ToList().IndexOf(chapter) + 1;
+                            var index = _data.Chapters.OrderBy(c => c.Page).ToList().IndexOf(chapter) + 1;
                             <MudSelectItem T="int" Value="@index">@chapter.Name</MudSelectItem>
                         }
                     </MudSelect>
@@ -259,10 +259,10 @@
 
     <MudPaper Elevation="2" Class="pa-4">
         <MudText Typo="Typo.h6" Class="mb-3" Style="text-align:center;">Character Trails</MudText>
-        <div class="character-trails-scroll">
-            <div class="character-trails-grid">
+        <div style="overflow-x:auto;">
+            <MudGrid Style="flex-wrap:nowrap; min-width:max-content;">
 
-                <div class="character-trail-column book-progress-column">
+                <MudItem xs="12" sm="6" md="2">
                     <MudText Typo="Typo.subtitle2" Class="mb-1" Style="text-align:center;">📖 Book Progress</MudText>
                     <MudTimeline TimelinePosition="TimelinePosition.Start">
                         @foreach (var chapter in PastChapters)
@@ -272,22 +272,19 @@
                                              Style="@($"opacity:{(isCurrent ? "1.0" : "0.5")}")">
                                 <ItemContent>
                                     <MudText Typo="Typo.body2" Style="text-align:center;"><strong>@chapter.Name</strong></MudText>
-                                    @if (chapter.Page.HasValue)
-                                    {
-                                        <MudText Typo="Typo.caption" Style="text-align:center;">p.@chapter.Page</MudText>
-                                    }
+                                    <MudText Typo="Typo.caption" Style="text-align:center;">p.@chapter.Page</MudText>
                                 </ItemContent>
                             </MudTimelineItem>
                         }
                     </MudTimeline>
-                </div>
+                </MudItem>
 
                 @foreach (var character in _data.Characters)
                 {
                     var trail = GetTrail(character.Id).Where(e => !e.IsInvisible).ToList();
                     if (!trail.Any()) continue;
 
-                    <div class="character-trail-column">
+                    <MudItem xs="12" sm="6" md="2">
                         <MudText Typo="Typo.subtitle2" Style="@($"color:{character.Color}; text-align:center;")" Class="mb-1">
                             @character.Name
                         </MudText>
@@ -299,14 +296,16 @@
                                     var entry = trail[i];
                                     var entryOpacity = GetOpacity(i, trail.Count);
                                     var entryChapter = _data.Chapters
-                                    .FirstOrDefault(ch => ch.Index == entry.ChapterIndex);
+                                    .Where(ch => ch.Page <= entry.Page)
+                                    .OrderByDescending(ch => ch.Page)
+                                    .FirstOrDefault();
 
                                     if (entryChapter != null && entryChapter != lastChapterShown)
                                     {
                                         lastChapterShown = entryChapter;
                                         <MudTimelineItem Color="Color.Default" Size="Size.Small" Style="opacity:0.5">
                                             <ItemContent>
-                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Class="trail-chapter-label">
+                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-align:center;">
                                                     ── @entryChapter.Name ──
                                                 </MudText>
                                             </ItemContent>
@@ -316,21 +315,21 @@
                                     <MudTimelineItem Color="Color.Default" Size="Size.Small"
                                                      Style="@($"opacity:{entryOpacity.ToString("F2", System.Globalization.CultureInfo.InvariantCulture)}")">
                                         <ItemContent>
-                                            <MudText Typo="Typo.body2" Class="trail-location"><strong>@entry.Location</strong></MudText>
-                                            <MudText Typo="Typo.caption" Class="trail-position">@FormatEntryPosition(entry)</MudText>
+                                            <MudText Typo="Typo.body2" Style="text-align:center;"><strong>@entry.Location</strong></MudText>
+                                            <MudText Typo="Typo.caption" Style="text-align:center;">@FormatEntryPosition(entry)</MudText>
                                             @if (!string.IsNullOrEmpty(entry.Note))
                                             {
-                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Class="trail-note">@entry.Note</MudText>
+                                                <MudText Typo="Typo.caption" Color="Color.Secondary" Style="text-align:center;">@entry.Note</MudText>
                                             }
                                         </ItemContent>
                                     </MudTimelineItem>
                                 }
                             }
                         </MudTimeline>
-                    </div>
+                    </MudItem>
                 }
 
-            </div>
+            </MudGrid>
         </div>
         </MudPaper>
     }
@@ -420,13 +419,13 @@
     }
 
     private ChapterModel? SelectedChapter =>
-        _data.Chapters.OrderBy(c => c.Index).ElementAtOrDefault(_chapterIndex - 1);
+        _data.Chapters.OrderBy(c => c.Page).ElementAtOrDefault(_chapterIndex - 1);
 
     private List<ChapterModel> PastChapters =>
         _data.Chapters
-            .OrderBy(c => c.Index)
+            .OrderBy(c => c.Page)
             .Take(Math.Clamp(_chapterIndex, 0, _data.Chapters.Count))
-            .OrderByDescending(c => c.Index)
+            .OrderByDescending(c => c.Page)
             .ToList();
 
     private List<CharacterModel> GetCharactersAtPreset(LocationPreset preset)
@@ -485,7 +484,6 @@
         {
             _data = await Http.GetFromJsonAsync<MapData>($"{DataFile}?v={DateTime.UtcNow.Ticks}")
                 ?? throw new InvalidOperationException("The file contained no map data.");
-            _data.NormalizeTimeline();
             _loadError = null;
         }
         catch (Exception ex)
@@ -531,17 +529,15 @@
     {
         return _data.Entries
             .Where(e => e.CharacterId == characterId &&
-                        (SelectedChapter == null || e.ChapterIndex < SelectedChapter.Index))
-            .OrderByDescending(e => e.ChapterIndex)
-            .ThenByDescending(e => e.Sequence)
+                        (SelectedChapter == null || e.Page < SelectedChapter.Page))
+            .OrderByDescending(e => e.Page)
             .Take(5)
             .ToList();
     }
 
     private static string FormatEntryPosition(MapEntry entry)
     {
-        var position = $"Ch. {entry.ChapterIndex}, Event {entry.Sequence}";
-        return entry.Page.HasValue ? $"{position} · p.{entry.Page.Value:g}" : position;
+        return $"p.{entry.Page:g}";
     }
 
     private int GetLabelOffset(string characterId, double midX, double midY)

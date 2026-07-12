@@ -1,14 +1,13 @@
 # Map Data Format
 
-Timeline order is based on chapters and event sequences, not printed page numbers.
+Timeline order is based on printed page numbers.
 
 ## Chapters
 
-Each chapter has a stable, one-based `Index`. `Page` is optional metadata for display only.
+Each chapter records its name and starting page. Chapters are ordered by `Page`.
 
 ```json
 {
-  "Index": 2,
   "Name": "Discovery",
   "Page": 6
 }
@@ -16,13 +15,12 @@ Each chapter has a stable, one-based `Index`. `Page` is optional metadata for di
 
 ## Entries
 
-Each movement entry identifies the chapter in which it occurs and its one-based sequence within that chapter. Sequences are scoped to a character and chapter. `Page` may be omitted when the source does not provide stable page numbers.
+Each movement entry requires a `Page`. Decimal values may be used to order multiple events that happen on the same printed page.
 
 ```json
 {
   "CharacterId": "character-id",
-  "ChapterIndex": 2,
-  "Sequence": 1,
+  "Page": 12.5,
   "Location": "Palancar Valley",
   "X": 42.5,
   "Y": 61.25,
@@ -31,6 +29,6 @@ Each movement entry identifies the chapter in which it occurs and its one-based 
 }
 ```
 
-When chapter `N` is selected, the viewer shows only entries where `ChapterIndex < N`. Entries from chapter `N` and all later chapters remain hidden.
+When a chapter is selected, the viewer shows only entries whose `Page` is less than that chapter's starting page. Events in the selected chapter and all later chapters remain hidden.
 
-Legacy data without chapter indices is normalized when loaded. Chapters receive indices from their existing JSON order, and legacy entries with page numbers are assigned to the latest chapter whose starting page is not greater than the entry page.
+Add a final synthetic chapter such as `End of Eragon` after the book's last real chapter so readers can reveal events from the final chapter. Its page should be later than every event in the book.
